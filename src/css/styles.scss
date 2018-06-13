@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i');
+@import '~ngx-perfect-scrollbar/dist/lib/perfect-scrollbar.component.css';
+@import './reset.scss';
+@import './common.scss';
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: $fontFamily;
+  @include font('regular');
+  overflow: hidden;
+  max-height: 100vh;
+}

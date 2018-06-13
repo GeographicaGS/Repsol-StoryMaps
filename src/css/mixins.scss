@@ -1,0 +1,40 @@
+@mixin font($weight: normal, $condensed: false) {
+  @if $weight == extra-light {
+    font-weight: 200;
+  } @else if $weight == light {
+    font-weight: 300;
+  } @else if $weight == normal {
+    font-weight: 400;
+  } @else if $weight == medium {
+    font-weight: 500;
+  } @else if $weight == bold {
+    font-weight: 700;
+  } @else if $weight == black {
+    font-weight: 900;
+  }
+  @if $condensed == condensed {
+    font-family: $fontFamilyCondensed;
+  } @else {
+    font-family: $fontFamily;
+  }
+}
+
+@mixin pseudoElemIcon($file, $height, $width) {
+  content: '';
+  display: inline-block;
+  height: $height;
+  width: $width;
+  background-image: url($file);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+@mixin noselect() {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
