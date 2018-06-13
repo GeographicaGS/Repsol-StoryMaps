@@ -1,3 +1,5 @@
+@import "common.scss";
+
 :host {
   flex: 1 1 0%;
   display: flex;
@@ -9,7 +11,12 @@
     height: 0;
     bottom: 0;
     right: 0;
-    transform: translateX(13%) translateY(16%);
+    // transform: translateX(13%) translateY(16%);
+    // transform: translateX(100%) translateY(16%) rotate(-80deg);
+    transform-origin: bottom right;
+    transform: translateX(100%) translateY(16%) rotate(-80deg);
+    animation: lensMove $animationTimeDefault 2s $animationFuncDefault;
+    animation-fill-mode: forwards;
     pointer-events: none;
     .map{
       /deep/ .mapboxgl-canvas-container {
@@ -25,4 +32,17 @@
   .map {
     flex: 1 1 0%;
   }
+
+  @keyframes lensMove{
+    from {
+      transform: translateX(100%) translateY(16%) rotate(-80deg);
+    }
+    to {
+      transform: translateX(13%) translateY(16%) rotate(0);
+    }
+  }
 }
+
+
+
+// translateX(100%) translateY(16%) rotate(-80deg)

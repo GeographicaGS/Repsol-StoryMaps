@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef, HostListener } from '@angular/core';
 import * as mapboxgl from '@carto/mapbox-gl';
 
 @Component({
@@ -6,7 +6,7 @@ import * as mapboxgl from '@carto/mapbox-gl';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit,  AfterViewInit {
 
   @ViewChild('map') map;
   @Input() bbox;
@@ -24,14 +24,19 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
     this.resizeMapLens();
     const map = new mapboxgl.Map({
       container: this.map.nativeElement,
       style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
     });
-    if (this.bbox) {
-      map.fitBounds(this.bbox);
-    }
+    map.on('load', () => {
+      if (this.bbox) {
+        map.fitBounds(this.bbox);
+      }
+    });
   }
 
   private resizeMapLens() {
