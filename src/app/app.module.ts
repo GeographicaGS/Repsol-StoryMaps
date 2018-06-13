@@ -7,6 +7,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 
 import { CommonModule } from './common/common.module';
+import { StoryMapsModule } from './sections/story-maps/story-maps.module';
 
 import { Routing } from './app.routing';
 
@@ -32,7 +33,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    CommonModule
+    CommonModule,
+    StoryMapsModule
   ],
   bootstrap: [AppComponent]
 })
