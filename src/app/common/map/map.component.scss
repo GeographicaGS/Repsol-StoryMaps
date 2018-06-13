@@ -1,0 +1,28 @@
+:host {
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  &.lens {
+    position: absolute;
+    width: 50%;
+    height: 0;
+    bottom: 0;
+    right: 0;
+    transform: translateX(13%) translateY(16%);
+    pointer-events: none;
+    .map{
+      /deep/ .mapboxgl-canvas-container {
+        canvas {
+          pointer-events: auto;
+          border-radius: 100%;
+          border: 4px solid #979797;
+          outline: none;
+        }
+      }
+    }
+  }
+  .map {
+    flex: 1 1 0%;
+  }
+}

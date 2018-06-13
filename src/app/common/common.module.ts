@@ -13,12 +13,14 @@ import { AuthGuard } from './services/auth/auth.guard';
 
 import { CommonRouting } from './common.routing';
 
+import { MapComponent } from './map/map.component';
+
 export function getCurrentLocaleFactory(localeService: LocaleService) {
   return localeService.locale;
 }
 
 const components = [
-  // Place your components here
+  MapComponent
 ];
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
