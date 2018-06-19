@@ -11,13 +11,13 @@
     height: 0;
     bottom: 0;
     right: 0;
-    // transform: translateX(13%) translateY(16%);
-    // transform: translateX(100%) translateY(16%) rotate(-80deg);
     transform-origin: bottom right;
     transform: translateX(100%) translateY(16%) rotate(-80deg);
-    animation: lensMove $animationTimeDefault 2s $animationFuncDefault;
-    animation-fill-mode: forwards;
-    pointer-events: none;
+    &.animate {
+      animation: lensMove $animationTimeDefault 1s $animationFuncDefault;
+      animation-fill-mode: forwards;
+      pointer-events: none;
+    }
     .map{
       /deep/ .mapboxgl-canvas-container {
         canvas {

@@ -1,0 +1,32 @@
+<h3>{{'Acumulado diario €' | translate}}</h3>
+<app-counter [step]="1" [countTo]="aggValue" [countFrom]="beforeAggValue" [duration]="counterDuration"></app-counter>
+<div class="categories" [class.inverCircleTransition]="restartAgg">
+  <div class="category orange">
+    <!-- <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'box-shadow': 'inset 0 -'+ getLevel(totalCircles.length - i, 'cost_gasoline') +'px 0 #F5A712'}"></div> -->
+    <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(245, 167, 18, '+ getLevel(totalCircles.length - i, 'cost_gasoline') +')'}"></div>
+    <div class="label">
+      <span>{{'Gasolina' | translate}}</span>
+    </div>
+  </div>
+  <div class="category green">
+    <!-- <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'box-shadow': 'inset 0 -'+ getLevel(totalCircles.length - i, 'cost_diesel') +'px 0 #50E3C2'}"></div> -->
+    <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(80, 227, 194, '+ getLevel(totalCircles.length - i, 'cost_diesel') +')'}"></div>
+    <div class="label">
+      <span>{{'Diesel' | translate}}</span>
+    </div>
+  </div>
+  <div class="category blue">
+    <!-- <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'box-shadow': 'inset 0 -'+ getLevel(totalCircles.length - i, 'cost_shop') +'px 0 #4A90E2'}"></div> -->
+    <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(74, 144, 226, '+ getLevel(totalCircles.length - i, 'cost_shop') +')'}"></div>
+    <div class="label">
+      <span>{{'Tienda' | translate}}</span>
+    </div>
+  </div>
+  <div class="category pink">
+    <!-- <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'box-shadow': 'inset 0 -'+ getLevel(totalCircles.length - i, 'cost_wash') +'px 0 #FA00FF'}"></div> -->
+    <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(250, 0, 255, '+ getLevel(totalCircles.length - i, 'cost_wash') +')'}"></div>
+    <div class="label">
+      <span>{{'Lavado' | translate}}</span>
+    </div>
+  </div>
+</div>

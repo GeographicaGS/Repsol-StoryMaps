@@ -1,0 +1,139 @@
+@import "common.scss";
+:host {
+  border: 2px solid rgba(255,255,255,0.16);
+  min-width: 196px;
+  min-height: 464px;
+  position: relative;
+  clip-path: polygon(50% 0%, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 0);
+  background-color: rgba(0,16,24,0.92);
+  border-bottom-right-radius: 30px;
+  &:after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    width: 33px;
+    height: 2px;
+    background-color: #3A464B;
+    transform: rotate(-45deg);
+    bottom: 10px;
+    right: -6px;
+  }
+  >* {
+    margin: 0 16px;
+  }
+  h3, app-counter {
+    color: $colorWhite;
+  }
+  h3 {
+    margin-top: 13px;
+    @include font('semibold');
+    font-size: 16px;
+    line-height: 16px
+  }
+  app-counter {
+    margin-top: 8px;
+    @include font('repsolviet', bold);
+    font-size: 32px;
+    line-height: 32px;
+  }
+  .categories {
+    display: flex;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    &.inverCircleTransition{
+      .category {
+        .circle {
+          @for $i from 20 through 1 {
+            &:nth-child(#{$i}) {
+              transition-delay: #{$i * 0.075}s;
+            }
+          }
+        }
+      }
+    }
+    &:not(.inverCircleTransition){
+      .category {
+        .circle {
+          @for $i from 20 through 1 {
+            &:nth-child(#{$i}) {
+              transition-delay: #{(20 - $i) * 0.075}s;
+            }
+          }
+        }
+      }
+    }
+    .category {
+      display: flex;
+      flex-direction: column;
+      &+.category {
+        margin-left: 16px;
+      }
+      &.orange {
+        span {
+          color: #F5A712;
+        }
+      }
+      &.green {
+        span {
+          color: #50E3C2;
+        }
+      }
+      &.blue {
+        span {
+          color: #4A90E2
+        }
+      }
+      &.pink {
+        color: #FA00FF;
+      }
+      .circle {
+        width: 12px;
+        height: 12px;
+        // background-color: #1F2B32;
+        // clip-path: circle(50% at 50% 50%);
+        // transition: box-shadow $animationTimeBlink $animationFuncAlt;
+
+        transition: background-color $animationTimeBlink $animationFuncAlt;
+
+        border-radius: 100%;
+        background-color: transparent;
+        position: relative;
+        &:after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          top: 0;
+          background-color: #1F2B32;
+          z-index: -1;
+          border-radius: 100%;
+        }
+        &+.circle{
+          margin-top: 2px;
+        }
+      }
+      .label {
+        display: inline-block;
+        width: 0;
+        line-height: 0;
+        margin-top: 12px;
+        span {
+          display: inline-block;
+          white-space: nowrap;
+          transform: translate(0,100%) rotate(-90deg);
+          vertical-align: bottom;
+          transform-origin: 0 0;
+          line-height: 12px;
+          @include font('bold');
+          font-size: 14px;
+          &:before {
+            content: "";
+            float: left;
+            margin-top: 100%;
+          }
+        }
+      }
+    }
+  }
+}

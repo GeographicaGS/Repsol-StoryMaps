@@ -13,6 +13,12 @@ import { Routing } from './app.routing';
 
 import { AppComponent } from './app.component';
 
+
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs, 'es');
+
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
 }

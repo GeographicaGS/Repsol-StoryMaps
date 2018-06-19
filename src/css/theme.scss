@@ -1,5 +1,42 @@
-$fontFamily: 'Roboto', sans-serif;
-$fontFamily: 'Oswald', sans-serif;
+@font-face {
+  font-family: 'titillium-regular';
+  src: url('/assets/fonts/titillium-regular-webfont.eot');
+  src: url('/assets/fonts/titillium-regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/assets/fonts/titillium-regular-webfont.woff2') format('woff2'),
+       url('/assets/fonts/titillium-regular-webfont.woff') format('woff'),
+       url('/assets/fonts/titillium-regular-webfont.ttf')  format('truetype'),
+       url('/assets/fonts/titillium-regular-webfont.svg#svgFontName') format('svg');
+}
+
+@font-face {
+  font-family: 'titillium-semibold';
+  src: url('/assets/fonts/titillium-semibold-webfont.eot');
+  src: url('/assets/fonts/titillium-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/assets/fonts/titillium-semibold-webfont.woff2') format('woff2'),
+       url('/assets/fonts/titillium-semibold-webfont.woff') format('woff'),
+       url('/assets/fonts/titillium-semibold-webfont.ttf')  format('truetype'),
+       url('/assets/fonts/titillium-semibold-webfont.svg#svgFontName') format('svg');
+}
+
+@font-face {
+  font-family: 'titillium-bold';
+  src: url('/assets/fonts/titillium-bold-webfont.eot');
+  src: url('/assets/fonts/titillium-bold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/assets/fonts/titillium-bold-webfont.woff2') format('woff2'),
+       url('/assets/fonts/titillium-bold-webfont.woff') format('woff'),
+       url('/assets/fonts/titillium-bold-webfont.ttf')  format('truetype'),
+       url('/assets/fonts/titillium-bold-webfont.svg#svgFontName') format('svg');
+}
+
+@font-face {
+  font-family: 'repsolviet-regular';
+  src: url('/assets/fonts/repsolviet-regular-webfont.eot');
+  src: url('/assets/fonts/repsolviet-regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/assets/fonts/repsolviet-regular-webfont.woff2') format('woff2'),
+       url('/assets/fonts/repsolviet-regular-webfont.woff') format('woff'),
+       url('/assets/fonts/repsolviet-regular-webfont.ttf')  format('truetype'),
+       url('/assets/fonts/repsolviet-regular-webfont.svg#svgFontName') format('svg');
+}
 
 $colorPrimary: #0255A5;
 $colorAccent: #1785FB;
