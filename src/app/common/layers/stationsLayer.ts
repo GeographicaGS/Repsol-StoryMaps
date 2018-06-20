@@ -8,6 +8,7 @@ export class StationsLayer {
 
   cartoOptions = {
     user_name: environment.cartoUser,
+    https: true,
     sublayers: [
       {
         sql: `SELECT
