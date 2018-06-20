@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { UtilService, CounterDuration } from '../..';
+import { UtilService, CounterDuration, CounterStep } from '../..';
 import { TransactionCategories } from '../..';
 
 @Component({
@@ -18,7 +18,6 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
       if (this.currentDate !== date) {
         this.dataAgg = JSON.parse(JSON.stringify(data));
         this.currentDate = date;
-        this.beforeAggValue = 0;
         this.restartAgg = true;
       } else {
         this.restartAgg = false;
@@ -27,8 +26,8 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
             this.dataAgg[key] += data[key];
           }
         }
-        this.beforeAggValue = this.aggValue;
       }
+      this.beforeAggValue = this.aggValue;
       this.aggValue = this.sumCategories(this.dataAgg);
       if (this.maxValue) {
         this.valuePerBall = this.maxValue / this.totalCircles.length;
@@ -45,7 +44,9 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
   aggValue = 0;
   beforeAggValue = 0;
   restartAgg = false;
+
   counterDuration = CounterDuration;
+  counterStep = CounterStep;
 
   constructor(
     private ref: ChangeDetectorRef,

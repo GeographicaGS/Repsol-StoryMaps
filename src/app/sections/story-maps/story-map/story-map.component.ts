@@ -3,7 +3,7 @@ import { UtilService, MapService, TransactionCategories } from '../../../common'
 import { environment } from '../../../../environments/environment';
 import * as CartoDB from 'cartodb';
 import { Subscription } from 'rxjs/Subscription';
-import { TransactionsLayer, CounterDuration } from '../../../common';
+import { TransactionsLayer, CounterDuration, CounterStep } from '../../../common';
 import { StoryMapService } from '../story-map.service';
 
 @Component({
@@ -33,7 +33,9 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   interval: any;
   totalValue = 0;
   beforeTotalValue = 0;
+
   counterDuration = CounterDuration;
+  counterStep = CounterStep;
 
   constructor(
     private zone: NgZone,
@@ -50,7 +52,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
         this.mapReady = true;
         const sql = new CartoDB.SQL({user: environment.cartoUser});
         sql.execute(`
-          select cost_diesel, cost_gasoline, cost_shop, cost_wash, start, time_seq from repsol_transact_summary_agg_4h order by start`
+          select cost_diesel, cost_gasoline, cost_shop, cost_wash, start, time_seq from repsol_transact_summary_agg order by start`
         )
         .done((data) => {
           this.processData(data);
@@ -65,7 +67,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
                   this.currentFrame = this.minFrame;
                 }
                 this.frameChanged(this.currentFrame);
-              }, 2000);
+              }, 2500);
             });
           });
         });

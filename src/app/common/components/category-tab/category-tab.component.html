@@ -1,5 +1,5 @@
 <h3>{{'Acumulado diario €' | translate}}</h3>
-<app-counter [step]="1" [countTo]="aggValue" [countFrom]="beforeAggValue" [duration]="counterDuration"></app-counter>
+<app-counter [step]="counterStep" [countTo]="aggValue" [countFrom]="beforeAggValue" [duration]="counterDuration"></app-counter>
 <div class="categories" [class.inverCircleTransition]="restartAgg">
   <div class="category orange">
     <!-- <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'box-shadow': 'inset 0 -'+ getLevel(totalCircles.length - i, 'cost_gasoline') +'px 0 #F5A712'}"></div> -->

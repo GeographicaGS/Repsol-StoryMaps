@@ -11,7 +11,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
 
   @ViewChild('svg') svg;
   @ViewChild('cursor') cursor;
-  private date: Date;
+  date: Date;
   private _data;
   private needRedraw = false;
 

@@ -3,3 +3,4 @@ export const TransactionCategories = [
 ];
 
 export const CounterDuration = 0.25;
+export const CounterStep = 10;

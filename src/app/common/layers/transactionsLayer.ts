@@ -7,7 +7,7 @@ export class TransactionsLayer {
 
   source = new carto.source.SQL(`
     select cartodb_id, the_geom, the_geom_webmercator, max_category,
-      start, cod_st, tot_cost, time_seq from repsol_transact_st_agg_4h
+      start, cod_st, tot_cost, time_seq from repsol_transact_st_agg
   `);
 
   viz = new carto.Viz(`

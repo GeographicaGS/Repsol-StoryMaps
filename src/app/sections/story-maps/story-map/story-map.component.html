@@ -4,11 +4,7 @@
 <app-map [bbox]="bbox" [lens]="true" [navigationControl]="true"></app-map>
 <div class="summary leftTransition"  *ngIf="mapReady">
   <h1>{{'Ventas total €' | translate }}</h1>
-  <!-- <h3>
-    1.234.567 -->
-    <!-- <div counto [step]="1" [countTo]="1234567" [countFrom]="0" [duration]="0.25" (countoChange)="counto = $event">{{counto | number : '1.0-0' : utilService.getLocale()}}</div> -->
-  <!-- </h3> -->
-  <app-counter [step]="1" [countTo]="totalValue" [countFrom]="beforeTotalValue" [duration]="counterDuration"></app-counter>
+  <app-counter [step]="counterStep" [countTo]="totalValue" [countFrom]="beforeTotalValue" [duration]="counterDuration"></app-counter>
 </div>
 <app-category-tab *ngIf="mapReady" class="leftTransition" [maxValue]="limits?.max" [observableData]="storyMapService.currentData"></app-category-tab>
 <div class="title">
