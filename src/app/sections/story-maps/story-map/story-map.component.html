@@ -11,6 +11,14 @@
   <img height="46" src="/assets/symbol-repsol.png">
   <div>
     <h3>{{'Consumo' | translate}}</h3>
-    <h1>{{'Estaciones y su evolución' | translate}}</h1>
+    <h1>{{'Operación salida verano' | translate}}</h1>
   </div>
+</div>
+<div *ngIf="mapReady && stationTitle" class="stationDetail opacityTransition">
+  <h3>{{'Acumulado cada 4 horas' | translate }}</h3>
+  <div>
+    <app-counter [step]="counterStep" [countTo]="aggStDetail" [countFrom]="beforeAggStDetail" [duration]="counterDuration"></app-counter>
+    €
+  </div>
+  <h4>{{'Estación' | translate}} {{stationTitle}}</h4>
 </div>

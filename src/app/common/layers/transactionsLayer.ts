@@ -1,9 +1,10 @@
 import * as carto from '@carto/carto-vl/dist/carto-vl.js';
 import { environment } from '../../../environments/environment';
+import { Layer } from './layer';
 
-export class TransactionsLayer {
+export class TransactionsLayer extends Layer {
 
-  cartoLayer: carto.Layer;
+  id = 'transactions';
 
   source = new carto.source.SQL(`
     select cartodb_id, the_geom, the_geom_webmercator, max_category,
@@ -14,7 +15,7 @@ export class TransactionsLayer {
     width: 0
     color: ramp(
       buckets($max_category, ['cost_diesel', 'cost_gasoline', 'cost_shop', 'cost_wash']),
-      [opacity(#50E3C2, 0.5), opacity(#F5A712, 0.5), opacity(#4A90E2, 0.5), opacity(#FA00FF, 0.5)]
+      [opacity(#50E3C2, 0.3), opacity(#F5A712, 0.3), opacity(#4A90E2, 0.3), opacity(#FA00FF, 0.3)]
     )
     strokeWidth: 0
   `);
@@ -24,13 +25,10 @@ export class TransactionsLayer {
       width: eq($time_seq,${frame}) * 50*sqrt($tot_cost)/sqrt(viewportMax($tot_cost))
       color: ramp(
         buckets($max_category, ['cost_diesel', 'cost_gasoline', 'cost_shop', 'cost_wash']),
-        [opacity(#50E3C2, 0.5), opacity(#F5A712, 0.5), opacity(#4A90E2, 0.5), opacity(#FA00FF, 0.5)]
+        [opacity(#50E3C2, 0.3), opacity(#F5A712, 0.3), opacity(#4A90E2, 0.3), opacity(#FA00FF, 0.3)]
       )
       strokeWidth: 0,
     `);
     this.cartoLayer.blendToViz(this.viz, 500);
   }
 }
-
-
-// filter: eq($time_seq,${frame})

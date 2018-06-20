@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef, HostListener } from '@angular/core';
 import * as mapboxgl from '@carto/mapbox-gl';
 import { MapService } from '../';
+import * as mapstyle from '../../../assets/mapstyle/style.json';
 
 @Component({
   selector: 'app-map',
@@ -34,10 +35,13 @@ export class MapComponent implements OnInit,  AfterViewInit {
 
   ngAfterViewInit() {
     this.resizeMapLens();
+    const _mapstyle = JSON.parse(JSON.stringify(mapstyle));
+    _mapstyle['sprite'] = window.location.origin + mapstyle['sprite'];
     const map = new mapboxgl.Map({
       container: this.map.nativeElement,
       // style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-      style: '/assets/mapstyle/style.json',
+      // style: '/assets/mapstyle/style.json',
+      style: _mapstyle,
       attributionControl: false
     });
     if (this.navigationControl) {
@@ -66,6 +70,10 @@ export class MapComponent implements OnInit,  AfterViewInit {
       } else {
         if (!this.isLens()) {
           this.mapService.setMap(map);
+        } else {
+          // Carto bug
+          map.isStyleLoaded = () => true ;
+          this.mapService.setLensMap(map);
         }
       }
     });

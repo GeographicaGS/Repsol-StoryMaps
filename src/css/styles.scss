@@ -56,6 +56,19 @@ body {
     animation-fill-mode: both;
   }
 
+  .opacityTransition {
+    animation: opacityTransition $animationTimeDefault $animationFuncAlt;
+    animation-fill-mode: both;
+  }
+
+  .focusMarker {
+    width: 32px;
+    height: 32px;
+    background-image: url('/assets/icons/focus.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
   @keyframes topTransition{
     from {
       transform: translateY(-100%);
@@ -74,6 +87,15 @@ body {
     }
     to {
       transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes opacityTransition{
+    from {
+      opacity: 0;
+    }
+    to {
       opacity: 1;
     }
   }

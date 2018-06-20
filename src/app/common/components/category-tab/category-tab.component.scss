@@ -45,7 +45,7 @@
         .circle {
           @for $i from 20 through 1 {
             &:nth-child(#{$i}) {
-              transition-delay: #{$i * 0.075}s;
+              transition-delay: #{$i * 0.025}s;
             }
           }
         }
