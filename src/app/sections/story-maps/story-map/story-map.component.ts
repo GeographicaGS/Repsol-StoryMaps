@@ -46,12 +46,12 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   mainInterval: any;
   routingInterval: any;
   totalValue = 0;
-  beforeTotalValue = 0;
+  // beforeTotalValue = 0;
 
   transactStDetails: any = [];
   stationTitle: string;
   aggStDetail = 0;
-  beforeAggStDetail = 0;
+  // beforeAggStDetail = 0;
 
   focusMarker: any;
 
@@ -136,9 +136,22 @@ export class StoryMapComponent implements OnInit, OnDestroy {
         }, (this.data.length * TransactionFrameDuration) / MaxRoutingFrame);
 
       });
-
     }
   }
+
+  // private stepGlobalInterval() {
+  //   console.log('ENTRO');
+  //   window.requestAnimationFrame(this.stepGlobalInterval.bind(this));
+  //   // timestamp = timestamp || new Date().getTime()
+  //   // const progress = timestamp - new Date().getTime();
+  //   // if (progress < TransactionFrameDuration) {
+  //   //   // requestAnimationFrame(this.stepGlobalInterval);
+  //   //   debugger;
+  //   // }
+  //   // else {
+  //   //   debugger;
+  //   // }
+  // }
 
   private processData(data) {
     this.data = data.rows;
@@ -181,10 +194,10 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   private frameChanged(frame) {
     const currentData = this.data.find(d => d.time_seq === frame);
     if (frame === 1) {
-      this.beforeTotalValue = 0;
+      // this.beforeTotalValue = 0;
       this.totalValue = 0;
     }
-    this.beforeTotalValue = this.totalValue;
+    // this.beforeTotalValue = this.totalValue;
     for (const t of TransactionCategories) {
       this.totalValue += currentData[t];
     }
@@ -216,7 +229,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   }
 
   private getAggStDetail() {
-    this.beforeAggStDetail = this.aggStDetail;
+    // this.beforeAggStDetail = this.aggStDetail;
     let result = 0;
     for (const t of this.transactStDetails) {
       if (t.time_seq > this.currentFrame) {
@@ -224,6 +237,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       }
       result += t.tot_cost;
     }
+    return result;
   }
 
   ngOnDestroy() {

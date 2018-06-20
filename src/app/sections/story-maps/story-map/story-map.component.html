@@ -4,7 +4,7 @@
 <app-map [bbox]="bbox" [lens]="true" [navigationControl]="true"></app-map>
 <div class="summary leftTransition"  *ngIf="mapReady">
   <h1>{{'Ventas total €' | translate }}</h1>
-  <app-counter [step]="counterStep" [countTo]="totalValue" [countFrom]="beforeTotalValue" [duration]="counterDuration"></app-counter>
+  <app-counter [step]="counterStep" [countTo]="totalValue" [duration]="counterDuration"></app-counter>
 </div>
 <app-category-tab *ngIf="mapReady" class="leftTransition" [maxValue]="limits?.max" [observableData]="storyMapService.currentData"></app-category-tab>
 <div class="title">
@@ -17,7 +17,7 @@
 <div *ngIf="mapReady && stationTitle" class="stationDetail opacityTransition">
   <h3>{{'Acumulado cada 4 horas' | translate }}</h3>
   <div>
-    <app-counter [step]="counterStep" [countTo]="aggStDetail" [countFrom]="beforeAggStDetail" [duration]="counterDuration"></app-counter>
+    <app-counter [step]="counterStep" [countTo]="aggStDetail" [duration]="counterDuration"></app-counter>
     €
   </div>
   <h4>{{'Estación' | translate}} {{stationTitle}}</h4>

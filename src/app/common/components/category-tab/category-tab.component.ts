@@ -27,7 +27,7 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
           }
         }
       }
-      this.beforeAggValue = this.aggValue;
+      // this.beforeAggValue = this.aggValue;
       this.aggValue = this.sumCategories(this.dataAgg);
       if (this.maxValue) {
         this.valuePerBall = this.maxValue / this.totalCircles.length;
@@ -42,7 +42,7 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
   dataAgg: any = null;
   currentDate: string = null;
   aggValue = 0;
-  beforeAggValue = 0;
+  // beforeAggValue = 0;
   restartAgg = false;
 
   counterDuration = CounterDuration;

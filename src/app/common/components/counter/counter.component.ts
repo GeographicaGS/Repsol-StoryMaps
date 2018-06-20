@@ -10,10 +10,19 @@ import { UtilService } from '../..';
 })
 export class CounterComponent implements OnInit {
 
-  @Input() countTo: number;
-  @Input() countFrom: number;
+  private _countTo: number;
+  @Input() set countTo(to) {
+    this.countFrom = this._countTo;
+    this._countTo = to;
+  }
+  get countTo() {
+    return this._countTo;
+  }
+  // @Input()countFrom: number;
   @Input() duration: number;
   @Input() step: number;
+
+  countFrom = 0;
 
   @ViewChild('counter') counter;
 
@@ -23,9 +32,14 @@ export class CounterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.setCounterText(this.countTo);
   }
 
   countoChange(e) {
+    this.setCounterText(e);
+  }
+
+  private setCounterText(e) {
     this.counter.nativeElement.innerText = this.decimalPipe.transform(e, '1.0-0', this.utilService.getLocale());
   }
 
