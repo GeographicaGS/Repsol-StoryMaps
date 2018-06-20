@@ -8,7 +8,6 @@ export class StationsLayer {
 
   cartoOptions = {
     user_name: environment.cartoUser,
-    https: true,
     sublayers: [
       {
         sql: `SELECT
@@ -24,7 +23,8 @@ export class StationsLayer {
           FROM repsol_stations_points where dscr_marca='REPSOL'`,
         cartocss: '{}',
       }
-    ]
+    ],
+    maps_api_template: `https://${environment.cartoUser}.carto.com`
   };
 
   layerOptions = {
