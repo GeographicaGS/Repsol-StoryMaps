@@ -1,72 +1,36 @@
-import * as carto from '@carto/carto-vl/dist/carto-vl.js';
+import * as carto from '../../../assets/lib/carto-vl.js';
 import { environment } from '../../../environments/environment';
+import { Layer } from './layer';
 
-export class StationsLayer {
+export class StationsLayer extends Layer {
 
-  idSource = 'stations_source';
-  id = 'stations';
+  id = 'transactions';
 
-  cartoOptions = {
-    user_name: environment.cartoUser,
-    sublayers: [
-      {
-        sql: `SELECT
-          cartodb_id,
-          the_geom_webmercator,
-          cod_establecimiento_sr,
-          des_establecimiento_sr,
-          dscr_provincia,
-          localidad,
-          direccion,
-          dscr_localizacion,
-          dscr_marca
-          FROM repsol_stations_points where dscr_marca='REPSOL'`,
-        cartocss: '{}',
-      }
-    ],
-    maps_api_template: `https://${environment.cartoUser}.carto.com`
-  };
+  source = new carto.source.SQL(`SELECT
+    cartodb_id,
+    the_geom,
+    the_geom_webmercator,
+    cod_establecimiento_sr,
+    des_establecimiento_sr,
+    dscr_provincia,
+    localidad,
+    direccion,
+    dscr_localizacion,
+    dscr_marca
+    FROM repsol_stations_points where dscr_marca='REPSOL'`);
 
-  layerOptions = {
-    id: this.id,
-    type: 'symbol',
-    source: this.idSource,
-    'source-layer': 'layer0',
-    layout: {
-      'icon-image': 'repsol-icon-alt',
-      // 'icon-image': [
-      //   'match',
-      //   ['get', 'cartodb_id'],
-      //   1, 'marker-repsol-sel-alt.svg',
-      //   'repsol-icon-alt'
-      // ],
-      'icon-allow-overlap': true,
-      'icon-size': 0.25
-    }
-    // ,
-    // 'filter': [
-    //   '==',
-    //   'cod_establecimiento_sr',
-    //   '183122514'
-    // ]
-  };
+  viz = new carto.Viz(`
+    filter: false
+  `);
 
-  getLayoutIconImage(st_id) {
-    return [
-      'match',
-      ['get', 'cod_establecimiento_sr'],
-      st_id, 'marker-repsol-sel-alt',
-      'repsol-icon-alt'
-    ];
+  setMainStation(st_id: string) {
+    this.viz = new carto.Viz(`
+      width: eq($cod_establecimiento_sr,'${st_id}') * 32 + neq($cod_establecimiento_sr,'${st_id}') * 13
+      symbol: ramp(
+        buckets($cod_establecimiento_sr, ['${st_id}']),
+        sprites([sprite('/assets/cartografia/marker-repsol-sel-alt.svg'), sprite('/assets/cartografia/repsol-icon-alt.svg')])
+      )
+    `);
+    this.cartoLayer.blendToViz(this.viz, 500);
   }
-
-  getLayoutIconSize(st_id) {
-    return [
-      'match',
-      ['get', 'cod_establecimiento_sr'],
-      st_id, 1,
-      0.4
-    ];
-  }
-
 }

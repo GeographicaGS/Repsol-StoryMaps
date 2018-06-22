@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import * as carto from '@carto/carto-vl/dist/carto-vl.js';
+import * as carto from '../../../assets/lib/carto-vl.js';
 import * as mapboxgl from '@carto/mapbox-gl';
 import { environment } from '../../../environments/environment';
 

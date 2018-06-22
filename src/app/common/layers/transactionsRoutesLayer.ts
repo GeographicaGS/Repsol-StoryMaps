@@ -1,4 +1,4 @@
-import * as carto from '@carto/carto-vl/dist/carto-vl.js';
+import * as carto from '../../../assets/lib/carto-vl.js';
 import { environment } from '../../../environments/environment';
 import { Layer } from './layer';
 

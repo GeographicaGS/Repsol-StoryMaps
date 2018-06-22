@@ -40,23 +40,27 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   currentRoutingFrame = 0;
   limits = { min: null, max: null};
   transactionsLayer = new TransactionsLayer();
+  // stationsMapboxLayer = new StationsMapboxLayer();
   stationsLayer = new StationsLayer();
   transactionsRoutesLayer = new TransactionsRoutesLayer();
   totalLayersLoaded = 0;
-  mainInterval: any;
-  routingInterval: any;
+  // mainInterval: any;
+  // routingInterval: any;
+  requestAnimationFrameId: number;
   totalValue = 0;
-  // beforeTotalValue = 0;
 
   transactStDetails: any = [];
   stationTitle: string;
   aggStDetail = 0;
-  // beforeAggStDetail = 0;
 
   focusMarker: any;
 
   counterDuration = CounterDuration;
   counterStep = CounterStep;
+
+  globalTimestampAnimation: number;
+  routingTimestampAnimation: number;
+  transactionRoutinDuration: number;
 
   constructor(
     private zone: NgZone,
@@ -95,10 +99,12 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     .done((data) => {
       this.processData(data);
       this.mapService.addLayer(this.transactionsLayer);
-      this.mapService.addMapboxLayer(this.stationsLayer, true);
+      // this.mapService.addMapboxLayer(this.stationsMapboxLayer, true);
+      this.mapService.addLayer(this.stationsLayer, true);
       this.mapService.addLayer(this.transactionsRoutesLayer, true);
 
       this.transactionsLayer.cartoLayer.on('loaded', () => {
+        // this.transactionsLayer.viz.variables.torque.stop();
         this.totalLayersLoaded ++;
         this.checkAllLayersIsLoaded();
       });
@@ -108,50 +114,61 @@ export class StoryMapComponent implements OnInit, OnDestroy {
         this.checkAllLayersIsLoaded();
       });
 
+      this.stationsLayer.cartoLayer.on('loaded', () => {
+        this.totalLayersLoaded ++;
+        this.checkAllLayersIsLoaded();
+      });
+
     });
   }
 
   private checkAllLayersIsLoaded() {
-    const totalLayersForWait = 2;
+    const totalLayersForWait = 3;
     if (this.totalLayersLoaded === totalLayersForWait) {
 
       this.frameChanged(this.currentFrame);
       this.transactionsRoutesLayer.setFrame(this.currentRoutingFrame);
       this.zone.runOutsideAngular(() => {
 
-        this.mainInterval = setInterval(() => {
-          this.currentFrame ++;
-          if (this.currentFrame > this.maxFrame) {
-            this.currentFrame = this.minFrame;
-          }
-          this.frameChanged(this.currentFrame);
-        }, TransactionFrameDuration);
-
-        this.routingInterval = setInterval(() => {
-          this.currentRoutingFrame ++;
-          if ((this.currentRoutingFrame > MaxRoutingFrame) || (this.currentFrame > this.maxFrame) || this.currentFrame === this.minFrame) {
-            this.currentRoutingFrame = 1;
-          }
-          this.transactionsRoutesLayer.setFrame(this.currentRoutingFrame);
-        }, (this.data.length * TransactionFrameDuration) / MaxRoutingFrame);
+        this.transactionRoutinDuration = (this.data.length * TransactionFrameDuration) / MaxRoutingFrame;
+        this.globalTimestampAnimation = new Date().getTime();
+        this.routingTimestampAnimation = this.globalTimestampAnimation;
+        this.requestAnimationFrameId = requestAnimationFrame(this.animate.bind(this));
 
       });
     }
   }
 
-  // private stepGlobalInterval() {
-  //   console.log('ENTRO');
-  //   window.requestAnimationFrame(this.stepGlobalInterval.bind(this));
-  //   // timestamp = timestamp || new Date().getTime()
-  //   // const progress = timestamp - new Date().getTime();
-  //   // if (progress < TransactionFrameDuration) {
-  //   //   // requestAnimationFrame(this.stepGlobalInterval);
-  //   //   debugger;
-  //   // }
-  //   // else {
-  //   //   debugger;
-  //   // }
-  // }
+  private animate() {
+    this.requestAnimationFrameId = requestAnimationFrame(this.animate.bind(this));
+
+    const now = new Date().getTime(),
+      globalDuration = now - this.globalTimestampAnimation,
+      routingDuration = now - this.routingTimestampAnimation
+    ;
+
+    if (routingDuration >= this.transactionRoutinDuration) {
+      this.routingTimestampAnimation = now;
+      this.currentRoutingFrame ++;
+      if ((this.currentRoutingFrame > MaxRoutingFrame) || (this.currentFrame > this.maxFrame) || this.currentFrame === this.minFrame) {
+        this.currentRoutingFrame = 1;
+      }
+      this.transactionsRoutesLayer.setFrame(this.currentRoutingFrame);
+    }
+
+    if (globalDuration >= TransactionFrameDuration) {
+      // this.transactionsLayer.viz.variables.torque.play();
+      // setTimeout(() => {
+      //   this.transactionsLayer.viz.variables.torque.pause();
+      // }, 500);
+      this.globalTimestampAnimation = now;
+      this.currentFrame ++;
+      if (this.currentFrame > this.maxFrame) {
+        this.currentFrame = this.minFrame;
+      }
+      this.frameChanged(this.currentFrame);
+    }
+  }
 
   private processData(data) {
     this.data = data.rows;
@@ -194,10 +211,8 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   private frameChanged(frame) {
     const currentData = this.data.find(d => d.time_seq === frame);
     if (frame === 1) {
-      // this.beforeTotalValue = 0;
       this.totalValue = 0;
     }
-    // this.beforeTotalValue = this.totalValue;
     for (const t of TransactionCategories) {
       this.totalValue += currentData[t];
     }
@@ -224,8 +239,13 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     });
     this.focusMarker.setLngLat(scene.centroid);
     this.mapService.setBbox(scene.bbox, true);
-    this.mapService.setMapboxLayoutProperty(this.stationsLayer.id, 'icon-image', this.stationsLayer.getLayoutIconImage(scene.st_id), true);
-    this.mapService.setMapboxLayoutProperty(this.stationsLayer.id, 'icon-size', this.stationsLayer.getLayoutIconSize(scene.st_id), true);
+    this.stationsLayer.setMainStation(scene.st_id);
+    // this.mapService.setMapboxLayoutProperty(
+    //   this.stationsMapboxLayer.id, 'icon-image', this.stationsMapboxLayer.getLayoutIconImage(scene.st_id), true
+    // );
+    // this.mapService.setMapboxLayoutProperty(
+    //   this.stationsMapboxLayer.id, 'icon-size', this.stationsMapboxLayer.getLayoutIconSize(scene.st_id), true
+    // );
   }
 
   private getAggStDetail() {
@@ -242,12 +262,15 @@ export class StoryMapComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.mapService.setMap(null);
-    if (this.mainInterval) {
-      clearInterval(this.mainInterval);
+    if (this.requestAnimationFrameId) {
+      cancelAnimationFrame(this.requestAnimationFrameId);
     }
-    if (this.routingInterval) {
-      clearInterval(this.routingInterval);
-    }
+    // if (this.mainInterval) {
+    //   clearInterval(this.mainInterval);
+    // }
+    // if (this.routingInterval) {
+    //   clearInterval(this.routingInterval);
+    // }
   }
 
 }
