@@ -42,10 +42,9 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   transactionsLayer = new TransactionsLayer();
   // stationsMapboxLayer = new StationsMapboxLayer();
   stationsLayer = new StationsLayer();
-  transactionsRoutesLayer = new TransactionsRoutesLayer();
+  transactionsRoutesLayer = new TransactionsRoutesLayer({keepRoute: true});
+  transactionsActiveRoutesLayer = new TransactionsRoutesLayer({keepRoute: false});
   totalLayersLoaded = 0;
-  // mainInterval: any;
-  // routingInterval: any;
   requestAnimationFrameId: number;
   totalValue = 0;
 
@@ -102,14 +101,22 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       // this.mapService.addMapboxLayer(this.stationsMapboxLayer, true);
       this.mapService.addLayer(this.stationsLayer, true);
       this.mapService.addLayer(this.transactionsRoutesLayer, true);
+      this.mapService.addLayer(this.transactionsActiveRoutesLayer, true);
 
       this.transactionsLayer.cartoLayer.on('loaded', () => {
-        // this.transactionsLayer.viz.variables.torque.stop();
+        this.transactionsLayer.viz.variables.torque.stop();
         this.totalLayersLoaded ++;
         this.checkAllLayersIsLoaded();
       });
 
       this.transactionsRoutesLayer.cartoLayer.on('loaded', () => {
+        this.transactionsRoutesLayer.viz.variables.torque.stop();
+        this.totalLayersLoaded ++;
+        this.checkAllLayersIsLoaded();
+      });
+
+      this.transactionsActiveRoutesLayer.cartoLayer.on('loaded', () => {
+        this.transactionsActiveRoutesLayer.viz.variables.torque.stop();
         this.totalLayersLoaded ++;
         this.checkAllLayersIsLoaded();
       });
@@ -123,14 +130,14 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   }
 
   private checkAllLayersIsLoaded() {
-    const totalLayersForWait = 3;
+    const totalLayersForWait = 4;
     if (this.totalLayersLoaded === totalLayersForWait) {
 
       this.frameChanged(this.currentFrame);
-      this.transactionsRoutesLayer.setFrame(this.currentRoutingFrame);
+
       this.zone.runOutsideAngular(() => {
 
-        this.transactionRoutinDuration = (this.data.length * TransactionFrameDuration) / MaxRoutingFrame;
+        this.transactionRoutinDuration = ((this.data.length - 1) * TransactionFrameDuration) / MaxRoutingFrame;
         this.globalTimestampAnimation = new Date().getTime();
         this.routingTimestampAnimation = this.globalTimestampAnimation;
         this.requestAnimationFrameId = requestAnimationFrame(this.animate.bind(this));
@@ -147,27 +154,35 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       routingDuration = now - this.routingTimestampAnimation
     ;
 
-    if (routingDuration >= this.transactionRoutinDuration) {
-      this.routingTimestampAnimation = now;
-      this.currentRoutingFrame ++;
-      if ((this.currentRoutingFrame > MaxRoutingFrame) || (this.currentFrame > this.maxFrame) || this.currentFrame === this.minFrame) {
-        this.currentRoutingFrame = 1;
-      }
-      this.transactionsRoutesLayer.setFrame(this.currentRoutingFrame);
+    if (globalDuration >= 500) {
+      this.transactionsLayer.viz.variables.torque.pause();
+      // Correction factor
+      this.transactionsLayer.viz.variables.torque.setSimProgress((1 / 84) * (this.currentFrame - 1));
     }
-
     if (globalDuration >= TransactionFrameDuration) {
-      // this.transactionsLayer.viz.variables.torque.play();
-      // setTimeout(() => {
-      //   this.transactionsLayer.viz.variables.torque.pause();
-      // }, 500);
-      this.globalTimestampAnimation = now;
+      this.transactionsLayer.viz.variables.torque.play();
+      this.globalTimestampAnimation = now - (globalDuration % TransactionFrameDuration);
+
       this.currentFrame ++;
       if (this.currentFrame > this.maxFrame) {
         this.currentFrame = this.minFrame;
       }
       this.frameChanged(this.currentFrame);
+
     }
+
+    if (routingDuration >= this.transactionRoutinDuration) {
+      const simProgress = (1 / MaxRoutingFrame) * this.currentRoutingFrame;
+
+      this.routingTimestampAnimation = now - (routingDuration % this.transactionRoutinDuration);
+      this.transactionsActiveRoutesLayer.viz.variables.torque.setSimProgress(simProgress);
+      this.transactionsRoutesLayer.viz.variables.torque.setSimProgress(simProgress);
+      this.currentRoutingFrame ++;
+      if ((this.currentRoutingFrame > MaxRoutingFrame) || (this.currentFrame > this.maxFrame) || this.currentFrame === this.minFrame) {
+        this.currentRoutingFrame = 0;
+      }
+    }
+
   }
 
   private processData(data) {
@@ -216,7 +231,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     for (const t of TransactionCategories) {
       this.totalValue += currentData[t];
     }
-    this.transactionsLayer.setFrame(this.currentFrame);
+    // this.transactionsLayer.setFrame(this.currentFrame);
     this.storyMapService.setCurrentData(currentData);
 
     const currentStationsScene = TransactionStationsScenes.find(t => t.frame === frame);

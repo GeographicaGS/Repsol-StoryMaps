@@ -12,32 +12,13 @@ export class TransactionsLayer extends Layer {
   `);
 
   viz = new carto.Viz(`
-    width: 0
+    @torque: torque($time_seq, 42, fade(0.25, 0.25))
+    width:  @torque * 50*sqrt($tot_cost)/sqrt(viewportMax($tot_cost))
     color: ramp(
       buckets($max_category, ['cost_diesel', 'cost_gasoline', 'cost_shop', 'cost_wash']),
       [opacity(#50E3C2, 0.3), opacity(#F5A712, 0.3), opacity(#4A90E2, 0.3), opacity(#FA00FF, 0.3)]
     )
     strokeWidth: 0
   `);
-  // viz = new carto.Viz(`
-  //   @torque: torque($time_seq, 210, fade(0, 0.5))
-  //   width:  @torque * 50*sqrt($tot_cost)/sqrt(viewportMax($tot_cost))
-  //   color: ramp(
-  //     buckets($max_category, ['cost_diesel', 'cost_gasoline', 'cost_shop', 'cost_wash']),
-  //     [opacity(#50E3C2, 0.3), opacity(#F5A712, 0.3), opacity(#4A90E2, 0.3), opacity(#FA00FF, 0.3)]
-  //   )
-  //   strokeWidth: 0,
-  // `);
 
-  setFrame(frame: number) {
-    this.viz = new carto.Viz(`
-      width: eq($time_seq,${frame}) * 50*sqrt($tot_cost)/sqrt(viewportMax($tot_cost))
-      color: ramp(
-        buckets($max_category, ['cost_diesel', 'cost_gasoline', 'cost_shop', 'cost_wash']),
-        [opacity(#50E3C2, 0.3), opacity(#F5A712, 0.3), opacity(#4A90E2, 0.3), opacity(#FA00FF, 0.3)]
-      )
-      strokeWidth: 0,
-    `);
-    this.cartoLayer.blendToViz(this.viz, 500);
-  }
 }
