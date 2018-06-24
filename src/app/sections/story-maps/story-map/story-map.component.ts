@@ -157,7 +157,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     if (globalDuration >= 500) {
       this.transactionsLayer.viz.variables.torque.pause();
       // Correction factor
-      this.transactionsLayer.viz.variables.torque.setSimProgress((1 / 84) * (this.currentFrame - 1));
+      this.transactionsLayer.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
     }
     if (globalDuration >= TransactionFrameDuration) {
       this.transactionsLayer.viz.variables.torque.play();
