@@ -33,7 +33,7 @@ pipeline {
             DEPLOY_TO = "prod"
           }
         }
-        sh "docker run -i --rm  -v \$(pwd)/dist:/usr/src/app/dist geographica/repsol_storymaps ng build --environment=${DEPLOY_TO} -op dist/dist --prod"
+        sh "docker run -i --rm  -v \$(pwd)/dist:/usr/src/app/dist geographica/repsol_storymaps ng build --environment=${DEPLOY_TO} -op dist/dist"
         sh "./deploy/sync_bucket.sh update repsol-storymaps.geographica.gs ./dist/dist"
       }
       post {
