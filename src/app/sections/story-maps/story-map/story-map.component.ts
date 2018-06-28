@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
-import { UtilService, MapService, TransactionCategories } from '../../../common';
+import { UtilService, MapService, TransactionCategories, TransactionOilCategories, TransactionNonOilCategories } from '../../../common';
 import { environment } from '../../../../environments/environment';
 import * as CartoDB from 'cartodb';
 import { Subscription } from 'rxjs/Subscription';
@@ -38,7 +38,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   maxFrame: number = null;
   currentFrame: number = null;
   currentRoutingFrame = 0;
-  limits = { min: null, max: null};
+  limits = {oil: { min: null, max: null }, nonOil: {min: null, max: null}};
   transactionsLayer = new TransactionsLayer();
   // stationsMapboxLayer = new StationsMapboxLayer();
   stationsLayer = new StationsLayer();
@@ -209,13 +209,23 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       }
     }
     for (const key of Object.keys(dailyAgg)) {
-      if (dailyAgg[key]) {
-        for (const t of TransactionCategories) {
-          if (this.limits.min === null || dailyAgg[key][t] < this.limits.min) {
-            this.limits.min = dailyAgg[key][t];
+      for (const t of TransactionCategories) {
+        if (TransactionOilCategories.indexOf(t) >= 0) {
+          if (
+            this.limits.oil.min === null || dailyAgg[key][t] < this.limits.oil.min) {
+            this.limits.oil.min = dailyAgg[key][t];
           }
-          if (this.limits.max === null || dailyAgg[key][t] > this.limits.max) {
-            this.limits.max = dailyAgg[key][t];
+          if (
+            this.limits.oil.max === null || dailyAgg[key][t] > this.limits.oil.max) {
+            this.limits.oil.max = dailyAgg[key][t];
+          }
+        } else {
+          if (this.limits.nonOil.min === null || dailyAgg[key][t] < this.limits.nonOil.min) {
+            this.limits.nonOil.min = dailyAgg[key][t];
+          }
+          if (
+            this.limits.nonOil.max === null || dailyAgg[key][t] > this.limits.nonOil.max) {
+            this.limits.nonOil.max = dailyAgg[key][t];
           }
         }
       }
@@ -231,7 +241,6 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     for (const t of TransactionCategories) {
       this.totalValue += currentData[t];
     }
-    // this.transactionsLayer.setFrame(this.currentFrame);
     this.storyMapService.setCurrentData(currentData);
 
     const currentStationsScene = TransactionStationsScenes.find(t => t.frame === frame);
@@ -255,16 +264,9 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.focusMarker.setLngLat(scene.centroid);
     this.mapService.setBbox(scene.bbox, true);
     this.stationsLayer.setMainStation(scene.st_id);
-    // this.mapService.setMapboxLayoutProperty(
-    //   this.stationsMapboxLayer.id, 'icon-image', this.stationsMapboxLayer.getLayoutIconImage(scene.st_id), true
-    // );
-    // this.mapService.setMapboxLayoutProperty(
-    //   this.stationsMapboxLayer.id, 'icon-size', this.stationsMapboxLayer.getLayoutIconSize(scene.st_id), true
-    // );
   }
 
   private getAggStDetail() {
-    // this.beforeAggStDetail = this.aggStDetail;
     let result = 0;
     for (const t of this.transactStDetails) {
       if (t.time_seq > this.currentFrame) {
@@ -280,12 +282,6 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     if (this.requestAnimationFrameId) {
       cancelAnimationFrame(this.requestAnimationFrameId);
     }
-    // if (this.mainInterval) {
-    //   clearInterval(this.mainInterval);
-    // }
-    // if (this.routingInterval) {
-    //   clearInterval(this.routingInterval);
-    // }
   }
 
 }

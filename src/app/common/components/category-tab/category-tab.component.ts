@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { UtilService, CounterDuration, CounterStep } from '../..';
-import { TransactionCategories } from '../..';
+import { TransactionCategories, TransactionOilCategories } from '../..';
 
 @Component({
   selector: 'app-category-tab',
@@ -10,7 +10,9 @@ import { TransactionCategories } from '../..';
 })
 export class CategoryTabComponent implements OnInit, OnDestroy {
 
-  @Input() maxValue: number = null;
+  // @Input() maxOil: number = null;
+  @Input() maxOil: number = null;
+  @Input() maxNonOil: number = null;
   @Input()
   set observableData(observable) {
     this.subscription = observable.subscribe((data) => {
@@ -27,22 +29,23 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
           }
         }
       }
-      // this.beforeAggValue = this.aggValue;
-      this.aggValue = this.sumCategories(this.dataAgg);
-      if (this.maxValue) {
-        this.valuePerBall = this.maxValue / this.totalCircles.length;
+      this.sumCategories(this.dataAgg);
+      if (this.maxOil) {
+        this.valuePerOilBall = this.maxOil / this.totalCircles.length;
+        this.valuePerNonOilBall = this.maxNonOil / this.totalCircles.length;
         this.ref.detectChanges();
       }
     });
   }
 
-  totalCircles = Array(20);
+  totalCircles = Array(16);
   subscription: Subscription;
-  valuePerBall: number;
+  valuePerOilBall: number;
+  valuePerNonOilBall: number;
   dataAgg: any = null;
   currentDate: string = null;
-  aggValue = 0;
-  // beforeAggValue = 0;
+  aggValueOil = 0;
+  aggValueNonOil = 0;
   restartAgg = false;
 
   counterDuration = CounterDuration;
@@ -58,9 +61,11 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
 
   getLevel(index, category) {
     const opacity = 1,
-    intervals = 4;
-    if (this.dataAgg !== null && this.maxValue !== null) {
-      const level = index * this.valuePerBall;
+    intervals = 4,
+    valuePerBall = (TransactionOilCategories.indexOf(category) >= 0) ? this.valuePerOilBall : this.valuePerNonOilBall;
+
+    if (this.dataAgg !== null && this.maxOil !== null && this.maxNonOil !== null) {
+      const level = index * valuePerBall;
       if (level < this.dataAgg[category]) {
         return opacity;
       } else {
@@ -68,7 +73,7 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
         if (index === 1) {
           valueToSearch = this.dataAgg[category];
         } else {
-          const levelBefore = (index - 1) * this.valuePerBall;
+          const levelBefore = (index - 1) * valuePerBall;
           if (levelBefore < this.dataAgg[category]) {
             valueToSearch = this.dataAgg[category] - levelBefore;
           } else {
@@ -76,29 +81,25 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
           }
         }
         for (let i = intervals; i >= 1; i--) {
-          if ((this.valuePerBall / i) >= valueToSearch) {
+          if ((valuePerBall / i) >= valueToSearch) {
             return opacity / i;
           }
         }
       }
-      // } else if (index === 1) {
-      //   return (this.dataAgg[category] * opacity) / this.valuePerBall;
-      // } else {
-      //   const levelBefore = (index - 1) * this.valuePerBall;
-      //   if (levelBefore < this.dataAgg[category]) {
-      //      return ((this.dataAgg[category] - levelBefore) * opacity) / this.valuePerBall;
-      //   }
-      // }
     }
     return 0;
   }
 
   private sumCategories(data) {
-    let result = 0;
+    this.aggValueOil = 0;
+    this.aggValueNonOil = 0;
     for (const t of TransactionCategories) {
-      result += data[t];
+      if (TransactionOilCategories.indexOf(t) >= 0) {
+        this.aggValueOil += data[t];
+      } else {
+        this.aggValueNonOil += data[t];
+      }
     }
-    return result;
   }
 
   ngOnDestroy() {

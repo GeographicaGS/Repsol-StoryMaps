@@ -1,24 +1,30 @@
 <div class="header topTransition" *ngIf="mapReady">
+  <h3>{{'Histograma de venta total / hora' | translate}}</h3>
   <app-histogram [data]="data" [observableDate]="storyMapService.currentData"></app-histogram>
 </div>
 <app-map [bbox]="bbox" [lens]="true" [navigationControl]="true"></app-map>
 <div class="summary leftTransition"  *ngIf="mapReady">
-  <h1>{{'Ventas total €' | translate }}</h1>
+  <h1>{{'Venta total €' | translate }}</h1>
   <app-counter [step]="counterStep" [countTo]="totalValue" [duration]="counterDuration"></app-counter>
 </div>
-<app-category-tab *ngIf="mapReady" class="leftTransition" [maxValue]="limits?.max" [observableData]="storyMapService.currentData"></app-category-tab>
+<app-category-tab *ngIf="mapReady" class="leftTransition" [maxOil]="limits?.oil.max" [maxNonOil]="limits?.nonOil.max" [observableData]="storyMapService.currentData"></app-category-tab>
 <div class="title">
   <img height="46" src="/assets/symbol-repsol.png">
   <div>
     <h3>{{'Consumo' | translate}}</h3>
-    <h1>{{'Operación salida verano' | translate}}</h1>
+    <h1>{{'Operación salida verano 2017' | translate}}</h1>
+    <h4><span></span><span></span><span></span>{{'Mapa de Volumen de ventas por estación' | translate}}</h4>
   </div>
 </div>
 <div *ngIf="mapReady && stationTitle" class="stationDetail opacityTransition">
-  <h3>{{'Acumulado cada 4 horas' | translate }}</h3>
+  <h3>{{'Venta acumulada diaria €' | translate }}</h3>
   <div>
     <app-counter [step]="counterStep" [countTo]="aggStDetail" [duration]="counterDuration"></app-counter>
     €
   </div>
-  <h4>{{'Estación' | translate}} {{stationTitle}}</h4>
+  <h4>{{'Estación' | translate}} Hipódromo <span>{{stationTitle}}</span></h4>
+</div>
+<div class="logo">
+  <span>Engineered by Geographica</span>
+  <app-geo-logo [geoHeight]="24"></app-geo-logo>
 </div>

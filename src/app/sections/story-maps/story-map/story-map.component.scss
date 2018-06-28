@@ -13,11 +13,22 @@
     right: 0;
     height: 64px;
     z-index: 1;
-    background-color: rgba(0,16,24,0.92);
-    border-bottom: 1px solid rgba(255,255,255,0.12);
+    // background-color: rgba(0,16,24,0.92);
+    background-color: $colorPrimary;
+    // border-bottom: 1px solid rgba(255,255,255,0.12);
     display: flex;
     align-items: center;
     padding: 0 16px;
+    h3 {
+      font-size: 12px;
+      line-height: 16px;
+      @include font('semibold');
+      color: $colorSecondary1;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
   .summary {
     position: absolute;
@@ -25,7 +36,7 @@
     left: 60px;
     top: 88px;
     h1 {
-      color: #00A2BD;
+      color: $colorSecondary1;
       font-size: 24px;
       @include font('semibold');
       text-transform: uppercase;
@@ -42,13 +53,13 @@
   app-category-tab {
     position: absolute;
     z-index: 1;
-    top: 217px;
+    top: 206px;
     left: 48px;
   }
   .title {
     position: absolute;
     z-index: 1;
-    bottom: 40px;
+    bottom: 24px;
     left: 48px;
     display: flex;
     justify-content: center;
@@ -64,11 +75,39 @@
       }
       h3 {
         font-style: italic;
-        color: #F5A712;
+        color: $colorSecondary9;
         font-size: 12px;
         @include font('semibold');
         text-transform: uppercase;
         line-height: 16px;
+      }
+      h4 {
+        color: $colorSecondary2;
+        font-size: 14px;
+        @include font('semibold');
+        line-height: 16px;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        span {
+          display: inline-block;
+          border-radius: 100%;
+          background-color: $colorSecondary2;
+          margin-right: 4px;
+          &:nth-child(1) {
+            height: 12px;
+            width: 12px;
+          }
+          &:nth-child(2) {
+            height: 8px;
+            width: 8px;
+          }
+          &:nth-child(3) {
+            height: 4px;
+            width: 4px;
+            margin-right: 8px;
+          }
+        }
       }
     }
   }
@@ -90,15 +129,30 @@
       @include font('semibold');
       font-size: 16px;
       line-height: 16px;
-      color: $colorWhite;
+      color: $colorSecondary1;
       text-align: right;
     }
     h4 {
-      color: #FE8201;
+      color: $colorPrimary;
       font-size: 18px;
       @include font('repsolviet', bold);
       line-height: 18px;
       text-shadow: -1px 0 #001018, 0 1px #001018, 1px 0 #001018, 0 -1px #001018
+    }
+  }
+
+  .logo {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    span {
+      color: #9B9B9B;
+      font-size: 12px;
+      line-height: 12px;
+      margin-right: 6px;
     }
   }
 }

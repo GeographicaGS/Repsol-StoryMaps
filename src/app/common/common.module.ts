@@ -16,6 +16,7 @@ import { MapService } from './services/map.service';
 
 import { CommonRouting } from './common.routing';
 
+import { GeoLogoComponent } from './components/geo-logo/geo-logo.component';
 import { MapComponent } from './map/map.component';
 import { HistogramComponent } from './components/histogram/histogram.component';
 import { CategoryTabComponent } from './components/category-tab/category-tab.component';
@@ -26,6 +27,7 @@ export function getCurrentLocaleFactory(localeService: LocaleService) {
 }
 
 const components = [
+  GeoLogoComponent,
   MapComponent,
   HistogramComponent,
   CategoryTabComponent,

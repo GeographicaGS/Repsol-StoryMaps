@@ -1,6 +1,15 @@
 export const TransactionCategories = [
   'cost_diesel', 'cost_gasoline', 'cost_shop', 'cost_wash'
 ];
+
+export const TransactionOilCategories = [
+  TransactionCategories[0], TransactionCategories[1],
+];
+
+export const TransactionNonOilCategories = [
+  TransactionCategories[2], TransactionCategories[3],
+];
+
 export const TransactionFrameDuration = 2500;
 
 export const CounterDuration = 0.25;
