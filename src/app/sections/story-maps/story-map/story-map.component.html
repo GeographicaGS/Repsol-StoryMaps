@@ -4,8 +4,32 @@
 </div>
 <app-map [bbox]="bbox" [lens]="true" [navigationControl]="true"></app-map>
 <div class="summary leftTransition"  *ngIf="mapReady">
-  <h1>{{'Venta total €' | translate }}</h1>
-  <app-counter [step]="counterStep" [countTo]="totalValue" [duration]="counterDuration"></app-counter>
+  <div>
+    <div class="mask">
+      <h2 class="{{getCarouselPosition(0,3)}}">{{'Venta total €' | translate }}</h2>
+      <h2 class="{{getCarouselPosition(4,8)}}">{{'Litros totales' | translate }}</h2>
+      <h2 class="{{getCarouselPosition(9,13)}}">{{'Transacciones totales' | translate }}</h2>
+      <h2 class="{{getCarouselPosition(14,18)}}">{{'Incidencias totales' | translate }}</h2>
+      <h2 class="{{getCarouselPosition(19,23)}}">{{'Índice calidad (E3)' | translate }}</h2>
+    </div>
+    <div class="mask">
+      <app-counter class="current {{getCarouselPosition(0,3)}}" [step]="counterStep" [countTo]="totalSales" [duration]="counterDuration"></app-counter>
+      <app-counter class="current {{getCarouselPosition(4,8)}}" [step]="counterStep" [countTo]="liters" [duration]="counterDuration"></app-counter>
+      <app-counter class="current {{getCarouselPosition(9,13)}}" [step]="counterStep" [countTo]="transactionsNumber" [duration]="counterDuration"></app-counter>
+      <app-counter class="current {{getCarouselPosition(14,18)}}" [step]="counterStep" [countTo]="0" [duration]="counterDuration"></app-counter>
+      <app-counter class="current {{getCarouselPosition(19,23)}}" [step]="counterStep" [countTo]="quality" [duration]="counterDuration" [format]="'1.0-2'"></app-counter>
+    </div>
+  </div>
+  <div *ngIf="salesComparedPreviousDay !== null || litersComparedPreviousDay !==null || transactionsComparedPreviousDay !== null || qualityComparedPreviousDay !== null" class="opacityTransition">
+    <h3>{{'Variación con respecto' | translate}}<br>{{'a la misma hora del día anterior' | translate}}</h3>
+    <div class="mask">
+      <app-counter class="compared {{salesComparedPreviousDay >= 0 ? 'positive': ''}} {{getCarouselPosition(0,3)}}" [showSimbol]="true" [step]="counterStep" [countTo]="salesComparedPreviousDay" [duration]="counterDuration"></app-counter>
+      <app-counter class="compared {{litersComparedPreviousDay >= 0 ? 'positive': ''}} {{getCarouselPosition(4,8)}}" [showSimbol]="true" [step]="counterStep" [countTo]="litersComparedPreviousDay" [duration]="counterDuration"></app-counter>
+      <app-counter class="compared {{transactionsComparedPreviousDay >= 0 ? 'positive': ''}} {{getCarouselPosition(9,13)}}" [showSimbol]="true" [step]="counterStep" [countTo]="transactionsComparedPreviousDay" [duration]="counterDuration"></app-counter>
+      <app-counter class="compared positive {{getCarouselPosition(14,18)}}" [showSimbol]="true" [step]="counterStep" [countTo]="0" [duration]="counterDuration"></app-counter>
+      <app-counter class="compared {{qualityComparedPreviousDay >= 0 ? 'positive': ''}} {{getCarouselPosition(19,23)}}" [showSimbol]="true" [step]="counterStep" [countTo]="qualityComparedPreviousDay" [duration]="counterDuration" [format]="'1.0-2'"></app-counter>
+    </div>
+  </div>
 </div>
 <app-category-tab *ngIf="mapReady" class="leftTransition" [maxOil]="limits?.oil.max" [maxNonOil]="limits?.nonOil.max" [observableData]="storyMapService.currentData"></app-category-tab>
 <div class="title">
@@ -16,15 +40,17 @@
     <h4><span></span><span></span><span></span>{{'Mapa de Volumen de ventas por estación' | translate}}</h4>
   </div>
 </div>
-<div *ngIf="mapReady && stationTitle" class="stationDetail opacityTransition">
+<div *ngIf="mapReady && stationData.name !== null" class="stationDetail opacityTransition">
   <h3>{{'Venta acumulada diaria €' | translate }}</h3>
   <div>
-    <app-counter [step]="counterStep" [countTo]="aggStDetail" [duration]="counterDuration"></app-counter>
+    <app-counter [step]="counterStep" [countTo]="stationData.sales" [duration]="counterDuration"></app-counter>
     €
   </div>
-  <h4>{{'Estación' | translate}} Hipódromo <span>{{stationTitle}}</span></h4>
+  <h4>{{'E.S.' | translate}} {{stationData.name}} <span>{{stationData.address}}</span></h4>
 </div>
 <div class="logo">
   <span>Engineered by Geographica</span>
   <app-geo-logo [geoHeight]="24"></app-geo-logo>
 </div>
+
+<app-station-popup #stationPopupEl [data]="stationData">{{currentFrame}}</app-station-popup>

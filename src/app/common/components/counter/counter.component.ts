@@ -13,7 +13,7 @@ export class CounterComponent implements OnInit {
   private _countTo: number;
   @Input() set countTo(to) {
     this.countFrom = this._countTo;
-    this._countTo = to;
+    this._countTo = (to !== null && to !== undefined) ? to : 0;
   }
   get countTo() {
     return this._countTo;
@@ -21,6 +21,9 @@ export class CounterComponent implements OnInit {
   // @Input()countFrom: number;
   @Input() duration: number;
   @Input() step: number;
+  @Input() showSimbol = false;
+  @Input() format = '1.0-0';
+  @Input() unit: string;
 
   countFrom = 0;
 
@@ -40,7 +43,13 @@ export class CounterComponent implements OnInit {
   }
 
   private setCounterText(e) {
-    this.counter.nativeElement.innerText = this.decimalPipe.transform(e, '1.0-0', this.utilService.getLocale());
+    this.counter.nativeElement.innerText =
+      (this.showSimbol && e > 0 ? '+' : '') +
+      this.decimalPipe.transform(e, this.format, this.utilService.getLocale())
+    ;
+    if (this.unit) {
+      this.counter.nativeElement.innerHTML += ` <span>${this.unit}</span>`;
+    }
   }
 
 }

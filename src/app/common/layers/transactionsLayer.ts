@@ -8,11 +8,11 @@ export class TransactionsLayer extends Layer {
 
   source = new carto.source.SQL(`
     select cartodb_id, the_geom, the_geom_webmercator, max_category,
-      start, cod_st, tot_cost, time_seq from repsol_transact_st_agg
+      start, cod_st, tot_cost, time_seq from repsol_transact_st_agg_1h
   `);
 
   viz = new carto.Viz(`
-    @torque: torque($time_seq, 42, fade(0.25, 0.25))
+    @torque: torque($time_seq, 84, fade(0.25, 0.25))
     width:  @torque * 50*sqrt($tot_cost)/sqrt(viewportMax($tot_cost))
     color: ramp(
       buckets($max_category, ['cost_diesel', 'cost_gasoline', 'cost_shop', 'cost_wash']),

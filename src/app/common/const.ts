@@ -10,24 +10,26 @@ export const TransactionNonOilCategories = [
   TransactionCategories[2], TransactionCategories[3],
 ];
 
-export const TransactionFrameDuration = 2500;
+export const TransactionFrameDuration = 2000;
 
 export const CounterDuration = 0.25;
-export const CounterStep = 10;
+export const CounterStep = 100;
 
 export const TransactionStationsScenes = [
   {
     frame: 1,
-    centroid: [-3.6257634588, 40.4454911045],
+    centroid: [-3.7579165, 40.470155],
     bbox: [
-      -3.7946782537,
-      40.3599230708,
-      -3.4568486639,
-      40.5310591382
+      -3.844712,
+      40.419535,
+      -3.661721,
+      40.500775
     ],
-    st_id: '183122514',
-    st_name: 'C/ TOMAS REDONDO, Nº 10 - MADRID'
+    st_id: '063237572',
+    st_name: 'Hipódromo',
+    st_address: 'CR A-6, Km 8 - MADRID',
+    image: 'hipodromo_station.png'
   }
 ];
 
-export const MaxRoutingFrame = 2017;
+export const MaxRoutingFrame = 1008;

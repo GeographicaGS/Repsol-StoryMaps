@@ -35,19 +35,73 @@
     z-index: 1;
     left: 60px;
     top: 88px;
-    h1 {
-      color: $colorSecondary1;
-      font-size: 24px;
-      @include font('semibold');
-      text-transform: uppercase;
-      line-height: 24px;
+    display: flex;
+    .mask {
+      overflow: hidden;
+      position: relative;
+      >* {
+        opacity: 1;
+        transform: translateY(0);
+        transition: transform $animationTimeFast $animationFuncAlt, opacity $animationTimeFast $animationFuncAlt;
+        // &:not(:first-child) {
+        //   position: absolute;
+        //   top:0;
+        //   left: 0;
+        // }
+        &.before{
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        &.after{
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+        &.before, &.after {
+          position: absolute;
+          top:0;
+          left: 0;
+        }
+      }
     }
-    app-counter {
-      font-size: 72px;
-      @include font('repsolviet', bold);
-      color: $colorWhite;
-      line-height: 72px;
-      margin-top: 8px;
+    >div {
+      // display: flex;
+      // flex-direction: column;
+      // justify-content: space-between;
+      &:first-child {
+        flex: 1 0 340px;
+      }
+      h2 {
+        color: $colorSecondary1;
+        font-size: 24px;
+        @include font('semibold');
+        text-transform: uppercase;
+        line-height: 24px;
+      }
+      app-counter.current {
+        font-size: 72px;
+        @include font('repsolviet', bold);
+        color: $colorWhite;
+        line-height: 72px;
+        margin-top: 8px;
+      }
+      app-counter.compared {
+        margin-top: 8px;
+        @include font('repsolviet', normal);
+      	font-size: 32px;
+        line-height: 32px;
+        color: #FF002A;
+        text-shadow: -1px 0 #001018, 0 1px #001018, 1px 0 #001018, 0 -1px #001018;
+        transition: color $animationTimeFast $animationFuncAlt, transform $animationTimeFast $animationFuncAlt, opacity $animationTimeFast $animationFuncAlt;
+        &.positive {
+          color: #0FD200;
+        }
+      }
+      h3 {
+        color: $colorSecondary2;
+        @include font('semibold');
+        font-size: 14px;
+        line-height: 16px;
+      }
     }
   }
   app-category-tab {
@@ -137,8 +191,15 @@
       font-size: 18px;
       @include font('repsolviet', bold);
       line-height: 18px;
-      text-shadow: -1px 0 #001018, 0 1px #001018, 1px 0 #001018, 0 -1px #001018
+      text-shadow: -1px 0 #001018, 0 1px #001018, 1px 0 #001018, 0 -1px #001018;
+      span {
+        color: $colorSecondary6;
+      }
     }
+  }
+
+  >app-station-popup {
+    display: none;
   }
 
   .logo {

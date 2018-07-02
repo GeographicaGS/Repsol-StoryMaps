@@ -62,4 +62,16 @@ export class MapService {
     return new mapboxgl.Marker(marker).setLngLat([0, 0]).addTo(map);
   }
 
+  addPopup(lngLat, content, lensMap = false) {
+    const map = lensMap ? this.lensMap.getValue() : this.map.getValue();
+    return new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      anchor: 'bottom'
+    })
+    .setLngLat(lngLat)
+    .setDOMContent(content)
+    .addTo(map);
+  }
+
 }

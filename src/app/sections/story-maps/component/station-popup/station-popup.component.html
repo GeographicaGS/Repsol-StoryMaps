@@ -1,0 +1,30 @@
+<div *ngIf="data.image" class="imageMini" [ngStyle]="{'background-image': 'url(/assets/stations/' + data.image + ')'}"></div>
+<div class="allInfo">
+  <div *ngIf="data.image" class="image" [ngStyle]="{'background-image': 'url(/assets/stations/' + data.image + ')'}"></div>
+  <div class="header">
+    <h3>{{'Estación' | translate}} {{data.name}}</h3>
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.sales" [unit]="'€'" [duration]="counterDuration"></app-counter>
+      <span>{{'venta' | translate}}</span>
+    </div>
+  </div>
+  <div class="content">
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.liters" [unit]="'m3'" [duration]="counterDuration"></app-counter>
+      <span>{{'de combustible' | translate}}</span>
+    </div>
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.transactions" [duration]="counterDuration"></app-counter>
+      <span>{{'transacciones' | translate}}</span>
+    </div>
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.incidences" [duration]="counterDuration"></app-counter>
+      <span>{{'incidencias' | translate}}</span>
+    </div>
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.quality" [unit]="'/10'" [format]="'1.0-2'" [duration]="counterDuration"></app-counter>
+      <span>{{'Calidad E3 trimestral' | translate}}</span>
+    </div>
+  </div>
+  <h5 class="info">{{'Datos acumulados diario' | translate}}</h5>
+</div>

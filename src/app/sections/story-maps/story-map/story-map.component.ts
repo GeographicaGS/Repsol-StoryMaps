@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { UtilService, MapService, TransactionCategories, TransactionOilCategories, TransactionNonOilCategories } from '../../../common';
 import { environment } from '../../../../environments/environment';
 import * as CartoDB from 'cartodb';
@@ -11,6 +11,7 @@ import {
   TransactionFrameDuration,
   TransactionStationsScenes,
   TransactionsRoutesLayer,
+  TransactionsStationLayer,
   MaxRoutingFrame
 } from '../../../common';
 import { StoryMapService } from '../story-map.service';
@@ -23,6 +24,19 @@ import { StoryMapService } from '../story-map.service';
 export class StoryMapComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
+
+  @ViewChild('stationPopupEl', { read: ElementRef }) stationPopupEl: ElementRef;
+  stationData = {
+    sales: 0,
+    liters: 0,
+    transactions: 0,
+    incidences: 0,
+    quality: 0,
+    name: null,
+    image: '',
+    address: null
+  };
+  stationPopup: any;
 
   bbox = [[
     -10.0634765625,
@@ -44,13 +58,19 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   stationsLayer = new StationsLayer();
   transactionsRoutesLayer = new TransactionsRoutesLayer({keepRoute: true});
   transactionsActiveRoutesLayer = new TransactionsRoutesLayer({keepRoute: false});
+  transactionsStationLayer = new TransactionsStationLayer();
   totalLayersLoaded = 0;
   requestAnimationFrameId: number;
-  totalValue = 0;
+  totalSales = 0;
+  salesComparedPreviousDay: number = null;
+  liters = 0;
+  litersComparedPreviousDay: number = null;
+  transactionsNumber = 0;
+  transactionsComparedPreviousDay: number = null;
+  quality = 0;
+  qualityComparedPreviousDay: number = null;
 
   transactStDetails: any = [];
-  stationTitle: string;
-  aggStDetail = 0;
 
   focusMarker: any;
 
@@ -93,7 +113,9 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.mapReady = true;
     this.createFocusMarker();
     new CartoDB.SQL({user: environment.cartoUser}).execute(`
-      select cost_diesel, cost_gasoline, cost_shop, cost_wash, start, time_seq from repsol_transact_summary_agg order by start`
+      select
+      cost_diesel, cost_gasoline, cost_shop, cost_wash, start, tot_transact, tot_l, avg_e3, time_seq
+      from repsol_transact_summary_agg_1h order by start`
     )
     .done((data) => {
       this.processData(data);
@@ -102,6 +124,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       this.mapService.addLayer(this.stationsLayer, true);
       this.mapService.addLayer(this.transactionsRoutesLayer, true);
       this.mapService.addLayer(this.transactionsActiveRoutesLayer, true);
+      this.mapService.addLayer(this.transactionsStationLayer, true);
 
       this.transactionsLayer.cartoLayer.on('loaded', () => {
         this.transactionsLayer.viz.variables.torque.stop();
@@ -126,11 +149,17 @@ export class StoryMapComponent implements OnInit, OnDestroy {
         this.checkAllLayersIsLoaded();
       });
 
+      this.transactionsStationLayer.cartoLayer.on('loaded', () => {
+        this.transactionsStationLayer.viz.variables.torque.stop();
+        this.totalLayersLoaded ++;
+        this.checkAllLayersIsLoaded();
+      });
+
     });
   }
 
   private checkAllLayersIsLoaded() {
-    const totalLayersForWait = 4;
+    const totalLayersForWait = 5;
     if (this.totalLayersLoaded === totalLayersForWait) {
 
       this.frameChanged(this.currentFrame);
@@ -171,17 +200,17 @@ export class StoryMapComponent implements OnInit, OnDestroy {
 
     }
 
-    if (routingDuration >= this.transactionRoutinDuration) {
-      const simProgress = (1 / MaxRoutingFrame) * this.currentRoutingFrame;
-
-      this.routingTimestampAnimation = now - (routingDuration % this.transactionRoutinDuration);
-      this.transactionsActiveRoutesLayer.viz.variables.torque.setSimProgress(simProgress);
-      this.transactionsRoutesLayer.viz.variables.torque.setSimProgress(simProgress);
-      this.currentRoutingFrame ++;
-      if ((this.currentRoutingFrame > MaxRoutingFrame) || (this.currentFrame > this.maxFrame) || this.currentFrame === this.minFrame) {
-        this.currentRoutingFrame = 0;
-      }
-    }
+    // if (routingDuration >= this.transactionRoutinDuration) {
+    //   const simProgress = (1 / MaxRoutingFrame) * this.currentRoutingFrame;
+    //
+    //   this.routingTimestampAnimation = now - (routingDuration % this.transactionRoutinDuration);
+    //   this.transactionsActiveRoutesLayer.viz.variables.torque.setSimProgress(simProgress);
+    //   this.transactionsRoutesLayer.viz.variables.torque.setSimProgress(simProgress);
+    //   this.currentRoutingFrame ++;
+    //   if ((this.currentRoutingFrame > MaxRoutingFrame) || (this.currentFrame > this.maxFrame) || this.currentFrame === this.minFrame) {
+    //     this.currentRoutingFrame = 0;
+    //   }
+    // }
 
   }
 
@@ -234,47 +263,117 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   }
 
   private frameChanged(frame) {
-    const currentData = this.data.find(d => d.time_seq === frame);
+    const currentData = this.data.find(d => d.time_seq === frame),
+      previousData = this.getDataPreviousDay(currentData.start);
+    let accumulated = 0;
     if (frame === 1) {
-      this.totalValue = 0;
+      this.totalSales = 0;
     }
     for (const t of TransactionCategories) {
-      this.totalValue += currentData[t];
+      accumulated += currentData[t];
     }
+    this.totalSales += accumulated;
+    this.salesComparedPreviousDay = this.getDataComparedPreviousDay(previousData, accumulated, 'oil');
+    this.liters += currentData.tot_l;
+    this.litersComparedPreviousDay = this.getDataComparedPreviousDay(previousData, currentData.tot_l, 'tot_l');
+    this.transactionsNumber +=  currentData.tot_transact;
+    this.transactionsComparedPreviousDay = this.getDataComparedPreviousDay(previousData, currentData.tot_transact, 'tot_transact');
+    this.quality = currentData.avg_e3;
+    this.qualityComparedPreviousDay = this.getDataComparedPreviousDay(previousData, currentData.avg_e3, 'avg_e3');
+
     this.storyMapService.setCurrentData(currentData);
 
     const currentStationsScene = TransactionStationsScenes.find(t => t.frame === frame);
     if (currentStationsScene) {
       this.activeStationScene(currentStationsScene);
     }
-    this.aggStDetail = this.getAggStDetail();
+    this.processStationDetails();
     this.ref.detectChanges();
   }
 
+  private getDataPreviousDay(date) {
+    let dateToSearch = new Date(date);
+    dateToSearch.setDate(dateToSearch.getDate() - 1);
+    dateToSearch = <any>(dateToSearch.toISOString().split('.')[0] + 'Z');
+    return this.data.find(d => d.start === dateToSearch);
+  }
+
+  private getDataComparedPreviousDay(dataToSearch, currentValue, dataType) {
+    if (dataToSearch) {
+      let accumulated = 0;
+      if (dataType === 'oil') {
+        for (const t of TransactionCategories) {
+          accumulated += dataToSearch[t];
+        }
+      } else {
+        accumulated = dataToSearch[dataType];
+      }
+      return currentValue - accumulated;
+    }
+    return null;
+  }
+
   private activeStationScene(scene) {
-    this.stationTitle = scene.st_name;
+    this.stationData.name = scene.st_name;
+    this.stationData.address = scene.st_address;
+    this.stationData.image = scene.image;
     this.transactStDetails = [];
     new CartoDB.SQL({user: environment.cartoUser}).execute(`
-      select time_seq, tot_cost from repsol_transact_st_detail
+      select time_seq, tot_cost, tot_l, tot_transact, avg_e3, start from repsol_transact_st_detail_1h
       where cod_establecimiento_sr = '${scene.st_id}' order by time_seq;
     `).done((data) => {
       this.transactStDetails = data.rows;
-      this.aggStDetail = this.getAggStDetail();
+      for (const t of this.transactStDetails) {
+        t.start = new Date(t.start);
+      }
+      this.processStationDetails();
     });
     this.focusMarker.setLngLat(scene.centroid);
+    if (this.stationPopup) {
+      this.stationPopup.remove();
+    }
+    this.stationPopup = this.mapService.addPopup(scene.centroid, this.stationPopupEl.nativeElement, true);
     this.mapService.setBbox(scene.bbox, true);
     this.stationsLayer.setMainStation(scene.st_id);
+    this.transactionsStationLayer.setStation(scene.st_id);
   }
 
-  private getAggStDetail() {
-    let result = 0;
-    for (const t of this.transactStDetails) {
-      if (t.time_seq > this.currentFrame) {
-        return result;
+  private processStationDetails() {
+    const currentData = this.data.find(t => t.time_seq === this.currentFrame);
+    this.stationData.sales = 0;
+    this.stationData.liters = 0;
+    this.stationData.transactions = 0;
+    this.stationData.incidences = 0;
+    this.stationData.quality = 0;
+
+    if (currentData) {
+      const currentDate = new Date(currentData.start);
+      currentDate.setUTCHours(0);
+      currentDate.setUTCMinutes(0);
+      currentDate.setUTCSeconds(0);
+      currentDate.setUTCMilliseconds(0);
+      for (const t of this.transactStDetails) {
+        if (t.time_seq > this.currentFrame) {
+          // return result;
+        } else if (t.start >= currentDate) {
+          this.stationData.sales += t.tot_cost;
+          this.stationData.liters += t.tot_l;
+          this.stationData.transactions += t.tot_transact;
+          this.stationData.quality = t.avg_e3;
+        }
       }
-      result += t.tot_cost;
     }
-    return result;
+    // return result;
+  }
+
+  getCarouselPosition(minFrame, maxFrame) {
+    const frame = this.currentFrame % 24;
+    if (frame >= minFrame && frame <= maxFrame) {
+      return '';
+    } else if (frame === maxFrame + 1) {
+      return 'after';
+    }
+    return 'before';
   }
 
   ngOnDestroy() {

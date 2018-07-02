@@ -46,6 +46,15 @@ body {
     }
   }
 
+  .mapboxgl-popup-content {
+    padding: 0;
+    border-radius: 0 0 2px 2px;
+  }
+
+  // .mapboxgl-popup-tip {
+  //   display: none;
+  // }
+
   .topTransition {
     animation: topTransition $animationTimeDefault $animationFuncAlt;
     animation-fill-mode: both;
