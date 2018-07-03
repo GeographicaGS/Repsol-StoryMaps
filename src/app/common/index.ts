@@ -7,4 +7,5 @@ export * from './layers/stationsLayer';
 export * from './layers/stationsMapboxLayer';
 export * from './layers/transactionsRoutesLayer';
 export * from './layers/transactionsStationLayer';
+export * from './layers/trafficLayer';
 export * from './const';

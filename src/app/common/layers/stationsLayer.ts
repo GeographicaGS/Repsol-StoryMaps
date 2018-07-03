@@ -4,7 +4,7 @@ import { Layer } from './layer';
 
 export class StationsLayer extends Layer {
 
-  id = 'transactions';
+  id = 'stations';
 
   source = new carto.source.SQL(`SELECT
     cartodb_id,

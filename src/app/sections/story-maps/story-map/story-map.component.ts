@@ -11,7 +11,11 @@ import {
   TransactionFrameDuration,
   TransactionStationsScenes,
   TransactionsRoutesLayer,
-  TransactionsStationLayer,
+  DieselTransactionsStationLayer,
+  GasolineTransactionsStationLayer,
+  ShopTransactionsStationLayer,
+  WashTransactionsStationLayer,
+  TrafficLayer,
   MaxRoutingFrame
 } from '../../../common';
 import { StoryMapService } from '../story-map.service';
@@ -56,9 +60,19 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   transactionsLayer = new TransactionsLayer();
   // stationsMapboxLayer = new StationsMapboxLayer();
   stationsLayer = new StationsLayer();
-  transactionsRoutesLayer = new TransactionsRoutesLayer({keepRoute: true});
-  transactionsActiveRoutesLayer = new TransactionsRoutesLayer({keepRoute: false});
-  transactionsStationLayer = new TransactionsStationLayer();
+
+  dieselTransactionsStationLayer = new DieselTransactionsStationLayer();
+  gasolineTransactionsStationLayer = new GasolineTransactionsStationLayer();
+  shopTransactionsStationLayer = new ShopTransactionsStationLayer();
+  washTransactionsStationLayer = new WashTransactionsStationLayer();
+  transactionsStationLayers = [
+    this.gasolineTransactionsStationLayer,
+    this.dieselTransactionsStationLayer,
+    this.shopTransactionsStationLayer,
+    this.washTransactionsStationLayer
+  ];
+
+  trafficLayer = new TrafficLayer();
   totalLayersLoaded = 0;
   requestAnimationFrameId: number;
   totalSales = 0;
@@ -119,12 +133,15 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     )
     .done((data) => {
       this.processData(data);
+      this.mapService.addLayer(this.trafficLayer);
       this.mapService.addLayer(this.transactionsLayer);
       // this.mapService.addMapboxLayer(this.stationsMapboxLayer, true);
+      // this.mapService.addLayer(this.transactionsRoutesLayer, true);
+      // this.mapService.addLayer(this.transactionsActiveRoutesLayer, true);
+      for (const t of this.transactionsStationLayers) {
+        this.mapService.addLayer(t, true);
+      }
       this.mapService.addLayer(this.stationsLayer, true);
-      this.mapService.addLayer(this.transactionsRoutesLayer, true);
-      this.mapService.addLayer(this.transactionsActiveRoutesLayer, true);
-      this.mapService.addLayer(this.transactionsStationLayer, true);
 
       this.transactionsLayer.cartoLayer.on('loaded', () => {
         this.transactionsLayer.viz.variables.torque.stop();
@@ -132,25 +149,45 @@ export class StoryMapComponent implements OnInit, OnDestroy {
         this.checkAllLayersIsLoaded();
       });
 
-      this.transactionsRoutesLayer.cartoLayer.on('loaded', () => {
-        this.transactionsRoutesLayer.viz.variables.torque.stop();
-        this.totalLayersLoaded ++;
-        this.checkAllLayersIsLoaded();
-      });
+      // this.transactionsRoutesLayer.cartoLayer.on('loaded', () => {
+      //   this.transactionsRoutesLayer.viz.variables.torque.stop();
+      //   this.totalLayersLoaded ++;
+      //   this.checkAllLayersIsLoaded();
+      // });
 
-      this.transactionsActiveRoutesLayer.cartoLayer.on('loaded', () => {
-        this.transactionsActiveRoutesLayer.viz.variables.torque.stop();
-        this.totalLayersLoaded ++;
-        this.checkAllLayersIsLoaded();
-      });
+      // this.transactionsActiveRoutesLayer.cartoLayer.on('loaded', () => {
+      //   this.transactionsActiveRoutesLayer.viz.variables.torque.stop();
+      //   this.totalLayersLoaded ++;
+      //   this.checkAllLayersIsLoaded();
+      // });
 
       this.stationsLayer.cartoLayer.on('loaded', () => {
         this.totalLayersLoaded ++;
         this.checkAllLayersIsLoaded();
       });
+      this.dieselTransactionsStationLayer.cartoLayer.on('loaded', () => {
+        this.dieselTransactionsStationLayer.viz.variables.torque.stop();
+        this.totalLayersLoaded ++;
+        this.checkAllLayersIsLoaded();
+      });
 
-      this.transactionsStationLayer.cartoLayer.on('loaded', () => {
-        this.transactionsStationLayer.viz.variables.torque.stop();
+      this.gasolineTransactionsStationLayer.cartoLayer.on('loaded', () => {
+        this.gasolineTransactionsStationLayer.viz.variables.torque.stop();
+        this.totalLayersLoaded ++;
+        this.checkAllLayersIsLoaded();
+      });
+      this.shopTransactionsStationLayer.cartoLayer.on('loaded', () => {
+        this.shopTransactionsStationLayer.viz.variables.torque.stop();
+        this.totalLayersLoaded ++;
+        this.checkAllLayersIsLoaded();
+      });
+      this.washTransactionsStationLayer.cartoLayer.on('loaded', () => {
+        this.washTransactionsStationLayer.viz.variables.torque.stop();
+        this.totalLayersLoaded ++;
+        this.checkAllLayersIsLoaded();
+      });
+      this.trafficLayer.cartoLayer.on('loaded', () => {
+        this.trafficLayer.viz.variables.torque.stop();
         this.totalLayersLoaded ++;
         this.checkAllLayersIsLoaded();
       });
@@ -159,7 +196,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   }
 
   private checkAllLayersIsLoaded() {
-    const totalLayersForWait = 5;
+    const totalLayersForWait = 7;
     if (this.totalLayersLoaded === totalLayersForWait) {
 
       this.frameChanged(this.currentFrame);
@@ -185,11 +222,25 @@ export class StoryMapComponent implements OnInit, OnDestroy {
 
     if (globalDuration >= 500) {
       this.transactionsLayer.viz.variables.torque.pause();
+      this.trafficLayer.viz.variables.torque.pause();
       // Correction factor
       this.transactionsLayer.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
+      this.trafficLayer.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
+
+      for (const t of this.transactionsStationLayers) {
+        t.viz.variables.torque.pause();
+        // Correction factor
+        t.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
+      }
     }
+
     if (globalDuration >= TransactionFrameDuration) {
       this.transactionsLayer.viz.variables.torque.play();
+      this.trafficLayer.viz.variables.torque.play();
+      for (const t of this.transactionsStationLayers) {
+        t.viz.variables.torque.play();
+      }
+
       this.globalTimestampAnimation = now - (globalDuration % TransactionFrameDuration);
 
       this.currentFrame ++;
@@ -260,6 +311,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       }
     }
     this.currentFrame = this.minFrame;
+    // this.currentFrame = 50;
   }
 
   private frameChanged(frame) {
@@ -335,7 +387,9 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.stationPopup = this.mapService.addPopup(scene.centroid, this.stationPopupEl.nativeElement, true);
     this.mapService.setBbox(scene.bbox, true);
     this.stationsLayer.setMainStation(scene.st_id);
-    this.transactionsStationLayer.setStation(scene.st_id);
+    for (const t of this.transactionsStationLayers) {
+      t.setStation(scene.st_id);
+    }
   }
 
   private processStationDetails() {
