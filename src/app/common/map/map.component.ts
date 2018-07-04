@@ -52,7 +52,7 @@ export class MapComponent implements OnInit,  AfterViewInit {
       if (this.bbox) {
         map.fitBounds(this.bbox,
           {
-            padding: {top: 20, bottom: 0, left: 250, right: (this.lens ? this.mapLens.elRef.nativeElement.offsetWidth - 70 : 0)},
+            padding: {top: 40, bottom: 0, left: 250, right: (this.lens ? this.mapLens.elRef.nativeElement.offsetWidth - 70 : 0)},
             duration: 1500
         });
         if (!this.isLens()) {

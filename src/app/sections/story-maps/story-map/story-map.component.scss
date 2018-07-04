@@ -13,42 +13,107 @@
     right: 0;
     height: 64px;
     z-index: 1;
-    background-color: rgba(0,16,24,0.92);
-    border-bottom: 1px solid rgba(255,255,255,0.12);
+    // background-color: rgba(0,16,24,0.92);
+    background-color: $colorPrimary;
+    // border-bottom: 1px solid rgba(255,255,255,0.12);
     display: flex;
     align-items: center;
     padding: 0 16px;
+    h3 {
+      font-size: 12px;
+      line-height: 16px;
+      @include font('semibold');
+      color: $colorSecondary1;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
   .summary {
     position: absolute;
     z-index: 1;
     left: 60px;
     top: 88px;
-    h1 {
-      color: #00A2BD;
-      font-size: 24px;
-      @include font('semibold');
-      text-transform: uppercase;
-      line-height: 24px;
+    display: flex;
+    .mask {
+      overflow: hidden;
+      position: relative;
+      >* {
+        opacity: 1;
+        transform: translateY(0);
+        transition: transform $animationTimeFast $animationFuncAlt, opacity $animationTimeFast $animationFuncAlt;
+        // &:not(:first-child) {
+        //   position: absolute;
+        //   top:0;
+        //   left: 0;
+        // }
+        &.before{
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        &.after{
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+        &.before, &.after {
+          position: absolute;
+          top:0;
+          left: 0;
+        }
+      }
     }
-    app-counter {
-      font-size: 72px;
-      @include font('repsolviet', bold);
-      color: $colorWhite;
-      line-height: 72px;
-      margin-top: 8px;
+    >div {
+      // display: flex;
+      // flex-direction: column;
+      // justify-content: space-between;
+      &:first-child {
+        flex: 1 0 340px;
+      }
+      h2 {
+        color: $colorSecondary1;
+        font-size: 24px;
+        @include font('semibold');
+        text-transform: uppercase;
+        line-height: 24px;
+      }
+      app-counter.current {
+        font-size: 72px;
+        @include font('repsolviet', bold);
+        color: $colorWhite;
+        line-height: 72px;
+        margin-top: 8px;
+      }
+      app-counter.compared {
+        margin-top: 8px;
+        @include font('repsolviet', normal);
+      	font-size: 32px;
+        line-height: 32px;
+        color: #FF002A;
+        text-shadow: -1px 0 #001018, 0 1px #001018, 1px 0 #001018, 0 -1px #001018;
+        transition: color $animationTimeFast $animationFuncAlt, transform $animationTimeFast $animationFuncAlt, opacity $animationTimeFast $animationFuncAlt;
+        &.positive {
+          color: #0FD200;
+        }
+      }
+      h3 {
+        color: $colorSecondary2;
+        @include font('semibold');
+        font-size: 14px;
+        line-height: 16px;
+      }
     }
   }
   app-category-tab {
     position: absolute;
     z-index: 1;
-    top: 217px;
+    top: 206px;
     left: 48px;
   }
   .title {
     position: absolute;
     z-index: 1;
-    bottom: 40px;
+    bottom: 24px;
     left: 48px;
     display: flex;
     justify-content: center;
@@ -64,11 +129,39 @@
       }
       h3 {
         font-style: italic;
-        color: #F5A712;
+        color: $colorSecondary9;
         font-size: 12px;
         @include font('semibold');
         text-transform: uppercase;
         line-height: 16px;
+      }
+      h4 {
+        color: $colorSecondary2;
+        font-size: 14px;
+        @include font('semibold');
+        line-height: 16px;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        span {
+          display: inline-block;
+          border-radius: 100%;
+          background-color: $colorSecondary2;
+          margin-right: 4px;
+          &:nth-child(1) {
+            height: 12px;
+            width: 12px;
+          }
+          &:nth-child(2) {
+            height: 8px;
+            width: 8px;
+          }
+          &:nth-child(3) {
+            height: 4px;
+            width: 4px;
+            margin-right: 8px;
+          }
+        }
       }
     }
   }
@@ -90,15 +183,37 @@
       @include font('semibold');
       font-size: 16px;
       line-height: 16px;
-      color: $colorWhite;
+      color: $colorSecondary1;
       text-align: right;
     }
     h4 {
-      color: #FE8201;
+      color: $colorPrimary;
       font-size: 18px;
       @include font('repsolviet', bold);
       line-height: 18px;
-      text-shadow: -1px 0 #001018, 0 1px #001018, 1px 0 #001018, 0 -1px #001018
+      text-shadow: -1px 0 #001018, 0 1px #001018, 1px 0 #001018, 0 -1px #001018;
+      span {
+        // color: $colorSecondary6;
+      }
+    }
+  }
+
+  >app-station-popup {
+    display: none;
+  }
+
+  .logo {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    span {
+      color: #9B9B9B;
+      font-size: 12px;
+      line-height: 12px;
+      margin-right: 6px;
     }
   }
 }

@@ -19,6 +19,7 @@
       pointer-events: none;
     }
     .map{
+      overflow: visible;
       /deep/ .mapboxgl-canvas-container {
         canvas {
           pointer-events: auto;

@@ -1,32 +1,47 @@
-<h3>{{'Acumulado diario €' | translate}}</h3>
-<app-counter [step]="counterStep" [countTo]="aggValue" [duration]="counterDuration"></app-counter>
+<h3>{{'Venta acumulada' | translate}}<br>{{'diaria €' | translate}}</h3>
+<div class="counters">
+  <div>
+    <h4>{{'Oil' | translate}}</h4>
+    <app-counter [step]="counterStep" [countTo]="aggValueOil" [duration]="counterDuration"></app-counter>
+  </div>
+  <div>
+    <h4>{{'Non Oil' | translate}}</h4>
+    <app-counter [step]="counterStep" [countTo]="aggValueNonOil" [duration]="counterDuration"></app-counter>
+  </div>
+</div>
 <div class="categories" [class.inverCircleTransition]="restartAgg">
-  <div class="category orange">
-    <!-- <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'box-shadow': 'inset 0 -'+ getLevel(totalCircles.length - i, 'cost_gasoline') +'px 0 #F5A712'}"></div> -->
-    <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(245, 167, 18, '+ getLevel(totalCircles.length - i, 'cost_gasoline') +')'}"></div>
-    <div class="label">
-      <span>{{'Gasolina' | translate}}</span>
+  <div class="group">
+    <div>
+      <div class="category red">
+        <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(228, 0, 40, '+ getLevel(totalCircles.length - i, 'cost_gasoline') +')'}"></div>
+        <div class="label">
+          <span>{{'Gasolina' | translate}}</span>
+        </div>
+      </div>
+      <div class="category orange">
+        <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(255, 184, 28, '+ getLevel(totalCircles.length - i, 'cost_diesel') +')'}"></div>
+        <div class="label">
+          <span>{{'Diesel' | translate}}</span>
+        </div>
+      </div>
     </div>
+    <span class="title">{{'Oil' | translate}}</span>
   </div>
-  <div class="category green">
-    <!-- <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'box-shadow': 'inset 0 -'+ getLevel(totalCircles.length - i, 'cost_diesel') +'px 0 #50E3C2'}"></div> -->
-    <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(80, 227, 194, '+ getLevel(totalCircles.length - i, 'cost_diesel') +')'}"></div>
-    <div class="label">
-      <span>{{'Diesel' | translate}}</span>
+  <div class="group">
+    <div>
+      <div class="category grey">
+        <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(156, 144, 129, '+ getLevel(totalCircles.length - i, 'cost_shop') +')'}"></div>
+        <div class="label">
+          <span>{{'Tienda' | translate}}</span>
+        </div>
+      </div>
+      <div class="category blue">
+        <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(74, 144, 226, '+ getLevel(totalCircles.length - i, 'cost_wash') +')'}"></div>
+        <div class="label">
+          <span>{{'Lavado' | translate}}</span>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="category blue">
-    <!-- <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'box-shadow': 'inset 0 -'+ getLevel(totalCircles.length - i, 'cost_shop') +'px 0 #4A90E2'}"></div> -->
-    <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(74, 144, 226, '+ getLevel(totalCircles.length - i, 'cost_shop') +')'}"></div>
-    <div class="label">
-      <span>{{'Tienda' | translate}}</span>
-    </div>
-  </div>
-  <div class="category pink">
-    <!-- <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'box-shadow': 'inset 0 -'+ getLevel(totalCircles.length - i, 'cost_wash') +'px 0 #FA00FF'}"></div> -->
-    <div *ngFor="let c of totalCircles; let i = index" class="circle" [ngStyle]="{'background-color': 'rgba(250, 0, 255, '+ getLevel(totalCircles.length - i, 'cost_wash') +')'}"></div>
-    <div class="label">
-      <span>{{'Lavado' | translate}}</span>
-    </div>
+    <span class="title">{{'Non Oil' | translate}}</span>
   </div>
 </div>

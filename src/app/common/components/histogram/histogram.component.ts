@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Output, OnDestroy, ViewChild, Input, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -11,7 +11,10 @@ export class HistogramComponent implements OnInit, OnDestroy {
 
   @ViewChild('svg') svg;
   @ViewChild('cursor') cursor;
+  @Output() frameSelected = new EventEmitter<number>();
+  @Output() paused = new EventEmitter<boolean>();
   date: Date;
+  pause = false;
   private _data;
   private needRedraw = false;
 
@@ -80,25 +83,46 @@ export class HistogramComponent implements OnInit, OnDestroy {
         .attr('y', (d) => y(d.value))
         .attr('height', (d) => height - y(d.value))
         ;
+
+        g.selectAll('bar')
+          .data(data)
+        .enter().append('rect')
+          .classed('interactive', true)
+          .attr('x', (d) => x(d.start) )
+          .attr('width', x.bandwidth())
+          .attr('y', 0)
+          .attr('height', height)
+          .attr('date', (d) => d.start)
+          .on('click', (d) => {
+            this.frameSelected.emit(d.time_seq);
+          })
+          ;
     }
   }
 
   private moveCursor() {
     const svg = d3.select(this.svg.nativeElement),
+    cursor = d3.select(this.cursor.nativeElement),
     rect = svg.select(`rect[date="${this.date}"]`);
     if (rect._groups && rect._groups.length > 0 && rect._groups[0] && rect._groups[0].length > 0) {
 
       const translateX = this.svg.nativeElement.getBoundingClientRect().left -
                           this.svg.nativeElement.parentElement.getBoundingClientRect().left +
                           parseFloat(rect._groups[0][0].getAttribute('x')) +
-                          Math.floor(rect._groups[0][0].getBoundingClientRect().width / 2);
+                          Math.floor(rect._groups[0][0].getBoundingClientRect().width / 2) -
+                          Math.floor(cursor._groups[0][0].getBoundingClientRect().width / 2);
 
-      d3.select(this.cursor.nativeElement).style(
+      cursor.style(
         'transform', `translateX(${translateX}px)`
       ).style('opacity', 1)
       ;
     }
     // this.svg.nativeElement.getBoundingClientRect().left - this.svg.nativeElement.parentElement.getBoundingClientRect().left
+  }
+
+  togglePause() {
+    this.pause = !this.pause;
+    this.paused.emit(this.pause);
   }
 
   ngOnDestroy() {
