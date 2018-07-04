@@ -14,25 +14,21 @@ export class TrafficLayer extends Layer {
     `);
   }
 
-  viz = new carto.Viz(`
-    @torque: torque($time_seq, 84, fade(0.5, 0.75))
-    width: ramp(
-      buckets($value, [0.25, 0.5, 0.75, 1]),
-      [1.5, 1.5, 1.5, 3]
-    ),
-    color: ramp(
-      buckets($value, [0.25, 0.5, 0.75, 1]),
-      [opacity(#6A972C, 0.8), opacity(#FFB81C,0.8), opacity(#e67600, 1), opacity(#E40028, 1)]
-    )
-    filter: @torque
-  `);
-
   constructor(detailMode = false) {
     super();
     this.detailMode = detailMode;
+    this.viz = new carto.Viz(`
+      @torque: torque($time_seq, 84, fade(0.5, 0.75))
+      width: ramp(
+        buckets($value, [0.25, 0.5, 0.75, 1]),
+        ${this.detailMode ? '[3, 3, 3, 5]' : '[1.5, 1.5, 1.5, 3]'}
+      ),
+      color: ramp(
+        buckets($value, [0.25, 0.5, 0.75, 1]),
+        [opacity(#6A972C, 0.8), opacity(#FFB81C,0.8), opacity(#e67600, 1), opacity(#E40028, 1)]
+      )
+      filter: @torque
+    `);
   }
 
 }
-
-
-// color: ramp(linear($value, 0, 1), [opacity(#6A972C, 1), opacity(#e67600, 1), opacity(#E40028, 1)])
