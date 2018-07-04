@@ -62,7 +62,6 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   transactionsLayer = new TransactionsLayer();
   // stationsMapboxLayer = new StationsMapboxLayer();
   stationsLayer = new StationsLayer();
-
   dieselTransactionsStationLayer = new DieselTransactionsStationLayer();
   gasolineTransactionsStationLayer = new GasolineTransactionsStationLayer();
   shopTransactionsStationLayer = new ShopTransactionsStationLayer();
@@ -73,19 +72,28 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.shopTransactionsStationLayer,
     this.washTransactionsStationLayer
   ];
-
   trafficLayer = new TrafficLayer();
   trafficLayerDetail = new TrafficLayer(true);
   totalLayersLoaded = 0;
   requestAnimationFrameId: number;
-  totalSales = 0;
+
+  accumulatedDaily = {
+    totalSales: 0,
+    liters: 0,
+    transactionsNumber: 0,
+    quality: 0,
+    tot_incid: 0,
+    cost_diesel: 0,
+    cost_gasoline: 0,
+    cost_shop: 0,
+    cost_wash: 0
+  };
+
   salesComparedPreviousDay: number = null;
-  liters = 0;
   litersComparedPreviousDay: number = null;
-  transactionsNumber = 0;
   transactionsComparedPreviousDay: number = null;
-  quality = 0;
   qualityComparedPreviousDay: number = null;
+  incidencesComparedPreviousDay: number = null;
 
   transactStDetails: any = [];
 
@@ -131,7 +139,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.createFocusMarker();
     new CartoDB.SQL({user: environment.cartoUser}).execute(`
       select
-      cost_diesel, cost_gasoline, cost_shop, cost_wash, start, tot_transact, tot_l, avg_e3, time_seq
+      cost_diesel, cost_gasoline, cost_shop, cost_wash, start, tot_transact, tot_l, avg_e3, tot_incid, time_seq
       from repsol_transact_summary_agg_1h order by start`
     )
     .done((data) => {
@@ -308,6 +316,9 @@ export class StoryMapComponent implements OnInit, OnDestroy {
         }
         dailyAgg[date][t] += d[t];
       }
+
+      // Save date as Object
+      d.start = new Date(d.start);
     }
     for (const key of Object.keys(dailyAgg)) {
       for (const t of TransactionCategories) {
@@ -332,27 +343,27 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       }
     }
     this.currentFrame = this.minFrame;
-    // this.currentFrame = 50;
   }
 
   private frameChanged(frame) {
     const currentData = this.data.find(d => d.time_seq === frame),
-      previousData = this.getDataPreviousDay(currentData.start);
-    let accumulated = 0;
-    if (frame === 1) {
-      this.totalSales = 0;
-    }
+      previousData = this.getDataPreviousDay(currentData.start)
+    ;
+
+    let totalSalesCurrentData = 0;
+
     for (const t of TransactionCategories) {
-      accumulated += currentData[t];
+      totalSalesCurrentData += currentData[t];
     }
-    this.totalSales += accumulated;
-    this.salesComparedPreviousDay = this.getDataComparedPreviousDay(previousData, accumulated, 'oil');
-    this.liters += currentData.tot_l;
+
+    this.salesComparedPreviousDay = this.getDataComparedPreviousDay(previousData, totalSalesCurrentData, 'oil');
     this.litersComparedPreviousDay = this.getDataComparedPreviousDay(previousData, currentData.tot_l, 'tot_l');
-    this.transactionsNumber +=  currentData.tot_transact;
     this.transactionsComparedPreviousDay = this.getDataComparedPreviousDay(previousData, currentData.tot_transact, 'tot_transact');
-    this.quality = currentData.avg_e3;
     this.qualityComparedPreviousDay = this.getDataComparedPreviousDay(previousData, currentData.avg_e3, 'avg_e3');
+    this.incidencesComparedPreviousDay = this.getDataComparedPreviousDay(previousData, currentData.avg_e3, 'tot_incid');
+
+    this.getAccumulatedDaily(this.utilService.getBeginningOfDay(currentData.start), currentData.start);
+    this.accumulatedDaily.quality = currentData.avg_e3;
 
     this.storyMapService.setCurrentData(currentData);
 
@@ -364,11 +375,30 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.ref.detectChanges();
   }
 
+  private getAccumulatedDaily(start, finish) {
+    for (const key of Object.keys(this.accumulatedDaily)) {
+      this.accumulatedDaily[key] = 0;
+    }
+    for (const d of this.data) {
+      if (d.start > finish) {
+        break;
+      } else if (d.start >= start && d.start <= finish) {
+        for (const t of TransactionCategories) {
+          this.accumulatedDaily.totalSales += d[t];
+          this.accumulatedDaily[t] += d[t];
+        }
+        this.accumulatedDaily.liters += d.tot_l;
+        this.accumulatedDaily.transactionsNumber = d.tot_transact;
+        this.accumulatedDaily.tot_incid += d.tot_incid;
+      }
+    }
+  }
+
   private getDataPreviousDay(date) {
-    let dateToSearch = new Date(date);
+    const dateToSearch = new Date(date);
     dateToSearch.setDate(dateToSearch.getDate() - 1);
-    dateToSearch = <any>(dateToSearch.toISOString().split('.')[0] + 'Z');
-    return this.data.find(d => d.start === dateToSearch);
+    // dateToSearch = <any>(dateToSearch.toISOString().split('.')[0] + 'Z');
+    return this.data.find(d => d.start.getTime() === dateToSearch.getTime());
   }
 
   private getDataComparedPreviousDay(dataToSearch, currentValue, dataType) {
@@ -392,7 +422,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.stationData.image = scene.image;
     this.transactStDetails = [];
     new CartoDB.SQL({user: environment.cartoUser}).execute(`
-      select time_seq, tot_cost, tot_l, tot_transact, avg_e3, start from repsol_transact_st_detail_1h
+      select time_seq, tot_cost, tot_l, tot_transact, avg_e3, tot_incid, start from repsol_transact_st_detail_1h
       where cod_establecimiento_sr = '${scene.st_id}' order by time_seq;
     `).done((data) => {
       this.transactStDetails = data.rows;
@@ -422,23 +452,19 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.stationData.quality = 0;
 
     if (currentData) {
-      const currentDate = new Date(currentData.start);
-      currentDate.setUTCHours(0);
-      currentDate.setUTCMinutes(0);
-      currentDate.setUTCSeconds(0);
-      currentDate.setUTCMilliseconds(0);
+      const currentDate = this.utilService.getBeginningOfDay(currentData.start);
       for (const t of this.transactStDetails) {
         if (t.time_seq > this.currentFrame) {
-          // return result;
+          break;
         } else if (t.start >= currentDate) {
           this.stationData.sales += t.tot_cost;
           this.stationData.liters += t.tot_l;
           this.stationData.transactions += t.tot_transact;
+          this.stationData.incidences += t.tot_incid;
           this.stationData.quality = t.avg_e3;
         }
       }
     }
-    // return result;
   }
 
   getCarouselPosition(minFrame, maxFrame) {

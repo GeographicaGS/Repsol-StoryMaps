@@ -85,6 +85,9 @@
         margin-top: 8px;
       }
       app-counter.compared {
+        /deep/ span{
+          font-size: 14px;
+        }
         margin-top: 8px;
         @include font('repsolviet', normal);
       	font-size: 32px;
@@ -135,31 +138,87 @@
         text-transform: uppercase;
         line-height: 16px;
       }
-      h4 {
-        color: $colorSecondary2;
-        font-size: 14px;
-        @include font('semibold');
-        line-height: 16px;
-        margin-top: 10px;
+      .legend {
         display: flex;
         align-items: center;
-        span {
-          display: inline-block;
-          border-radius: 100%;
-          background-color: $colorSecondary2;
-          margin-right: 4px;
-          &:nth-child(1) {
-            height: 12px;
-            width: 12px;
+        div {
+          color: $colorSecondary2;
+          font-size: 14px;
+          @include font('semibold');
+          line-height: 16px;
+          margin-top: 10px;
+          display: flex;
+          align-items: center;
+          & + div {
+            margin-left: 12px;
+            padding-left: 12px;
+            border-left: 1px solid rgba(156,144,129,0.48);
           }
-          &:nth-child(2) {
-            height: 8px;
-            width: 8px;
+          &:hover {
+            p {
+              opacity: 1;
+            }
+            &.circles {
+              p {
+                max-width: 300px;
+              }
+            }
+            &.ramp {
+              p {
+                max-width: 100px;
+              }
+            }
           }
-          &:nth-child(3) {
-            height: 4px;
-            width: 4px;
-            margin-right: 8px;
+          p {
+            max-width: 0;
+            opacity: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: max-width $animationTimeFast $animationFuncAlt, opacity $animationTimeFast $animationFuncAlt;
+          }
+          &.circles {
+            span {
+              display: inline-block;
+              border-radius: 100%;
+              background-color: $colorSecondary2;
+              margin-right: 4px;
+              &:nth-child(1) {
+                height: 12px;
+                width: 12px;
+              }
+              &:nth-child(2) {
+                height: 8px;
+                width: 8px;
+              }
+              &:nth-child(3) {
+                height: 4px;
+                width: 4px;
+                margin-right: 8px;
+              }
+            }
+          }
+          &.ramp {
+            span {
+              display: inline-block;
+              height: 12px;
+              width: 12px;
+              &:nth-child(2) {
+                background-color: $colorSecondary5;
+                border-radius: 2px 0 0 2px;
+                margin-left: 8px;
+              }
+              &:nth-child(3) {
+                background-color: $colorSecondary9;
+              }
+              &:nth-child(4) {
+                background-color: $colorPrimary;
+              }
+              &:nth-child(5) {
+                background-color: $colorSecondary6;
+                border-radius: 0 2px 2px 0;
+                margin-right: 8px;
+              }
+            }
           }
         }
       }
@@ -202,18 +261,18 @@
     display: none;
   }
 
-  .logo {
+  app-geo-logo {
     position: absolute;
     z-index: 1;
     right: 0;
     bottom: 0;
     display: flex;
     align-items: center;
-    span {
-      color: #9B9B9B;
-      font-size: 12px;
-      line-height: 12px;
-      margin-right: 6px;
-    }
+    // span {
+    //   color: #9B9B9B;
+    //   font-size: 12px;
+    //   line-height: 12px;
+    //   margin-right: 6px;
+    // }
   }
 }

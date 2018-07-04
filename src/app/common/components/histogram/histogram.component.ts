@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, OnDestroy, ViewChild, Input, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
 import { Subscription } from 'rxjs/Subscription';
+import { CounterDuration, CounterStep } from '../..';
 
 @Component({
   selector: 'app-histogram',
@@ -11,9 +12,13 @@ export class HistogramComponent implements OnInit, OnDestroy {
 
   @ViewChild('svg') svg;
   @ViewChild('cursor') cursor;
+  @ViewChild('tooltip') tooltip;
   @Output() frameSelected = new EventEmitter<number>();
   @Output() paused = new EventEmitter<boolean>();
+  counterDuration = CounterDuration;
+  counterStep = CounterStep;
   date: Date;
+  currentData = 0;
   pause = false;
   private _data;
   private needRedraw = false;
@@ -33,6 +38,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
   set observableDate(observable) {
     this.subscription = observable.subscribe((data) => {
       this.date = data.start;
+      this.currentData = this.getTotalValue(data);
       this.ref.detectChanges();
       this.draw(this.data);
       this.moveCursor();
@@ -59,7 +65,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
       const g = svg.append('g');
 
       for (const d of data) {
-        d.value = d.cost_diesel + d.cost_gasoline + d.cost_shop + d.cost_wash;
+        d.value = this.getTotalValue(d);
       }
       const x = d3.scaleBand().padding(0.2)
         .domain(data.map((d)  => d.start))
@@ -120,17 +126,23 @@ export class HistogramComponent implements OnInit, OnDestroy {
   private moveCursor() {
     const svg = d3.select(this.svg.nativeElement),
     cursor = d3.select(this.cursor.nativeElement),
+    tooltip = d3.select(this.tooltip.nativeElement),
     rect = svg.select(`rect[date="${this.date}"]`);
     if (rect._groups && rect._groups.length > 0 && rect._groups[0] && rect._groups[0].length > 0) {
 
       const translateX = this.svg.nativeElement.getBoundingClientRect().left -
                           this.svg.nativeElement.parentElement.getBoundingClientRect().left +
                           parseFloat(rect._groups[0][0].getAttribute('x')) +
-                          Math.floor(rect._groups[0][0].getBoundingClientRect().width / 2) -
-                          Math.floor(cursor._groups[0][0].getBoundingClientRect().width / 2);
+                          Math.floor(rect._groups[0][0].getBoundingClientRect().width / 2)
+                          ;
 
       cursor.style(
-        'transform', `translateX(${translateX}px)`
+        'transform', `translateX(${translateX - Math.floor(cursor._groups[0][0].getBoundingClientRect().width / 2)}px)`
+      ).style('opacity', 1)
+      ;
+
+      tooltip.style(
+        'transform', `translateX(${translateX - Math.floor(tooltip._groups[0][0].getBoundingClientRect().width / 2)}px)`
       ).style('opacity', 1)
       ;
     }
@@ -145,7 +157,11 @@ export class HistogramComponent implements OnInit, OnDestroy {
       date.setUTCSeconds(0);
       result.add(date.toISOString().split('.')[0] + 'Z');
     }
-    return  Array.from(result);
+    return  Array.from(result).map(r => new Date(r));
+  }
+
+  private getTotalValue (data) {
+    return data.cost_diesel + data.cost_gasoline + data.cost_shop + data.cost_wash;
   }
 
   togglePause() {

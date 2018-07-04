@@ -3,7 +3,7 @@
   <h3 *ngIf="date">{{date | date:'EE dd MMM yyyy'}}&nbsp;<span>{{date | date:'HH:mm': '+0000'}}</span></h3>
   <svg #svg></svg>
   <div #cursor class="cursor"></div>
-  <div class="tooltip">
-    123.456 €
+  <div #tooltip class="tooltip">
+    <app-counter [step]="counterStep" [countTo]="currentData" [duration]="counterDuration" [unit]="'€'"></app-counter>
   </div>
 </div>
