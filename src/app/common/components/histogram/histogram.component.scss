@@ -37,6 +37,7 @@
       }
     }
     svg /deep/{
+      overflow: visible;
       flex: 1 1 0%;
       height: 100%;
       // margin-left: 24px;
@@ -47,6 +48,23 @@
           cursor: pointer;
           &:hover {
             fill: $colorSecondary7;
+          }
+        }
+      }
+      .x.axis{
+        transform: translateY(27px);
+        .domain{
+          display: none;
+        }
+        .tick{
+          line{
+            display: none;
+          }
+          text{
+            color: $colorSecondary1;
+            @include font(bold);
+            font-size: 12px;
+            fill: $colorSecondary1;
           }
         }
       }

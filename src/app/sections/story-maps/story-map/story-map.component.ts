@@ -142,7 +142,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       // this.mapService.addLayer(this.transactionsRoutesLayer, true);
       // this.mapService.addLayer(this.transactionsActiveRoutesLayer, true);
 
-      this.mapService.addLayer(this.trafficLayerDetail, true);
+      // this.mapService.addLayer(this.trafficLayerDetail, true);
       for (const t of this.transactionsStationLayers) {
         this.mapService.addLayer(t, true);
       }
@@ -196,17 +196,17 @@ export class StoryMapComponent implements OnInit, OnDestroy {
         this.totalLayersLoaded ++;
         this.checkAllLayersIsLoaded();
       });
-      this.trafficLayerDetail.cartoLayer.on('loaded', () => {
-        this.trafficLayerDetail.viz.variables.torque.stop();
-        this.totalLayersLoaded ++;
-        this.checkAllLayersIsLoaded();
-      });
+      // this.trafficLayerDetail.cartoLayer.on('loaded', () => {
+      //   this.trafficLayerDetail.viz.variables.torque.stop();
+      //   this.totalLayersLoaded ++;
+      //   this.checkAllLayersIsLoaded();
+      // });
 
     });
   }
 
   private checkAllLayersIsLoaded() {
-    const totalLayersForWait = 8;
+    const totalLayersForWait = 7;
     if (this.totalLayersLoaded === totalLayersForWait) {
 
       this.frameChanged(this.currentFrame);

@@ -69,6 +69,24 @@ export class HistogramComponent implements OnInit, OnDestroy {
           .range([height, 0])
         ;
 
+      const xAxis = d3.axisBottom(x)
+      .tickValues(this.getTicksValues(data))
+      .tickFormat((d) => {
+        return d3.timeFormat('%d %b')(new Date(d));
+      })
+      // .tickSize(10)
+      // .tickPadding(5)
+      // .tickFormat(d3.time.format('%Y-%m'))
+      ;
+
+      svg.append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(xAxis)
+        // .style('text-anchor', 'end')
+        // .attr('transform', 'rotate(-90)' )
+        ;
+
       g.selectAll('bar')
         .data(data)
       .enter().append('rect')
@@ -83,7 +101,6 @@ export class HistogramComponent implements OnInit, OnDestroy {
         .attr('y', (d) => y(d.value))
         .attr('height', (d) => height - y(d.value))
         ;
-
         g.selectAll('bar')
           .data(data)
         .enter().append('rect')
@@ -101,23 +118,34 @@ export class HistogramComponent implements OnInit, OnDestroy {
   }
 
   private moveCursor() {
-    const svg = d3.select(this.svg.nativeElement),
-    cursor = d3.select(this.cursor.nativeElement),
-    rect = svg.select(`rect[date="${this.date}"]`);
-    if (rect._groups && rect._groups.length > 0 && rect._groups[0] && rect._groups[0].length > 0) {
+    // const svg = d3.select(this.svg.nativeElement),
+    // cursor = d3.select(this.cursor.nativeElement),
+    // rect = svg.select(`rect[date="${this.date}"]`);
+    // if (rect._groups && rect._groups.length > 0 && rect._groups[0] && rect._groups[0].length > 0) {
+    //
+    //   const translateX = this.svg.nativeElement.getBoundingClientRect().left -
+    //                       this.svg.nativeElement.parentElement.getBoundingClientRect().left +
+    //                       parseFloat(rect._groups[0][0].getAttribute('x')) +
+    //                       Math.floor(rect._groups[0][0].getBoundingClientRect().width / 2) -
+    //                       Math.floor(cursor._groups[0][0].getBoundingClientRect().width / 2);
+    //
+    //   cursor.style(
+    //     'transform', `translateX(${translateX}px)`
+    //   ).style('opacity', 1)
+    //   ;
+    // }
+  }
 
-      const translateX = this.svg.nativeElement.getBoundingClientRect().left -
-                          this.svg.nativeElement.parentElement.getBoundingClientRect().left +
-                          parseFloat(rect._groups[0][0].getAttribute('x')) +
-                          Math.floor(rect._groups[0][0].getBoundingClientRect().width / 2) -
-                          Math.floor(cursor._groups[0][0].getBoundingClientRect().width / 2);
-
-      cursor.style(
-        'transform', `translateX(${translateX}px)`
-      ).style('opacity', 1)
-      ;
+  private getTicksValues(data) {
+    const result = new Set();
+    for (const d of data) {
+      const date = new Date(d.start);
+      date.setUTCHours(0);
+      date.setUTCMinutes(0);
+      date.setUTCSeconds(0);
+      result.add(date.toISOString().split('.')[0] + 'Z');
     }
-    // this.svg.nativeElement.getBoundingClientRect().left - this.svg.nativeElement.parentElement.getBoundingClientRect().left
+    return  Array.from(result);
   }
 
   togglePause() {
