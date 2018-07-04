@@ -18,7 +18,8 @@ export const CounterStep = 100;
 export const TransactionStationsScenes = [
   {
     frame: 1,
-    centroid: [-3.7579165, 40.470155],
+    // centroid: [-3.7579165, 40.470155],
+    centroid: [-3.7579165, 40.461055],
     bbox: [
       -3.844712,
       40.419535,
@@ -27,7 +28,7 @@ export const TransactionStationsScenes = [
     ],
     st_id: '063237572',
     st_name: 'Hipódromo',
-    st_address: 'CR A-6, Km 8 - MADRID',
+    st_address: 'Carretera A-6, Km 8, MADRID',
     image: 'hipodromo_station.png'
   }
 ];

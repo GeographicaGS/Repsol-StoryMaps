@@ -1,6 +1,11 @@
 <div class="header topTransition" *ngIf="mapReady">
   <h3>{{'Histograma de venta total / hora' | translate}}</h3>
-  <app-histogram [data]="data" [observableDate]="storyMapService.currentData"></app-histogram>
+  <app-histogram #histogram
+    [data]="data"
+    (frameSelected)="goToFrame($event)"
+    (paused)="togglePause($event)"
+    [observableDate]="storyMapService.currentData"
+    ></app-histogram>
 </div>
 <app-map [bbox]="bbox" [lens]="true" [navigationControl]="true"></app-map>
 <div class="summary leftTransition"  *ngIf="mapReady">
@@ -46,7 +51,7 @@
     <app-counter [step]="counterStep" [countTo]="stationData.sales" [duration]="counterDuration"></app-counter>
     €
   </div>
-  <h4>{{'E.S.' | translate}} {{stationData.name}} <span>{{stationData.address}}</span></h4>
+  <h4>{{'E.S.' | translate}} {{stationData.name}} · <span>{{stationData.address}}</span></h4>
 </div>
 <div class="logo">
   <span>Engineered by Geographica</span>

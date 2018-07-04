@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { UtilService, MapService, TransactionCategories, TransactionOilCategories, TransactionNonOilCategories } from '../../../common';
+import { HistogramComponent } from '../../../common/components/histogram/histogram.component';
 import { environment } from '../../../../environments/environment';
 import * as CartoDB from 'cartodb';
 import { Subscription } from 'rxjs/Subscription';
@@ -30,6 +31,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   @ViewChild('stationPopupEl', { read: ElementRef }) stationPopupEl: ElementRef;
+  @ViewChild('histogram') histogram: HistogramComponent;
   stationData = {
     sales: 0,
     liters: 0,
@@ -73,6 +75,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   ];
 
   trafficLayer = new TrafficLayer();
+  trafficLayerDetail = new TrafficLayer(true);
   totalLayersLoaded = 0;
   requestAnimationFrameId: number;
   totalSales = 0;
@@ -138,6 +141,8 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       // this.mapService.addMapboxLayer(this.stationsMapboxLayer, true);
       // this.mapService.addLayer(this.transactionsRoutesLayer, true);
       // this.mapService.addLayer(this.transactionsActiveRoutesLayer, true);
+
+      this.mapService.addLayer(this.trafficLayerDetail, true);
       for (const t of this.transactionsStationLayers) {
         this.mapService.addLayer(t, true);
       }
@@ -191,12 +196,17 @@ export class StoryMapComponent implements OnInit, OnDestroy {
         this.totalLayersLoaded ++;
         this.checkAllLayersIsLoaded();
       });
+      this.trafficLayerDetail.cartoLayer.on('loaded', () => {
+        this.trafficLayerDetail.viz.variables.torque.stop();
+        this.totalLayersLoaded ++;
+        this.checkAllLayersIsLoaded();
+      });
 
     });
   }
 
   private checkAllLayersIsLoaded() {
-    const totalLayersForWait = 7;
+    const totalLayersForWait = 8;
     if (this.totalLayersLoaded === totalLayersForWait) {
 
       this.frameChanged(this.currentFrame);
@@ -221,25 +231,12 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     ;
 
     if (globalDuration >= 500) {
-      this.transactionsLayer.viz.variables.torque.pause();
-      this.trafficLayer.viz.variables.torque.pause();
-      // Correction factor
-      this.transactionsLayer.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
-      this.trafficLayer.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
-
-      for (const t of this.transactionsStationLayers) {
-        t.viz.variables.torque.pause();
-        // Correction factor
-        t.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
-      }
+      this.pauseAllLayers();
+      this.layersCorrectionFactor();
     }
 
     if (globalDuration >= TransactionFrameDuration) {
-      this.transactionsLayer.viz.variables.torque.play();
-      this.trafficLayer.viz.variables.torque.play();
-      for (const t of this.transactionsStationLayers) {
-        t.viz.variables.torque.play();
-      }
+      this.playAllLayers();
 
       this.globalTimestampAnimation = now - (globalDuration % TransactionFrameDuration);
 
@@ -248,9 +245,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
         this.currentFrame = this.minFrame;
       }
       this.frameChanged(this.currentFrame);
-
     }
-
     // if (routingDuration >= this.transactionRoutinDuration) {
     //   const simProgress = (1 / MaxRoutingFrame) * this.currentRoutingFrame;
     //
@@ -262,7 +257,33 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     //     this.currentRoutingFrame = 0;
     //   }
     // }
+  }
 
+  private pauseAllLayers() {
+    this.transactionsLayer.viz.variables.torque.pause();
+    this.trafficLayer.viz.variables.torque.pause();
+    this.trafficLayerDetail.viz.variables.torque.pause();
+    for (const t of this.transactionsStationLayers) {
+      t.viz.variables.torque.pause();
+    }
+  }
+
+  private playAllLayers() {
+    this.transactionsLayer.viz.variables.torque.play();
+    this.trafficLayer.viz.variables.torque.play();
+    this.trafficLayerDetail.viz.variables.torque.play();
+    for (const t of this.transactionsStationLayers) {
+      t.viz.variables.torque.play();
+    }
+  }
+
+  private layersCorrectionFactor() {
+    this.transactionsLayer.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
+    this.trafficLayer.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
+    this.trafficLayerDetail.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
+    for (const t of this.transactionsStationLayers) {
+      t.viz.variables.torque.setSimProgress((1 / (this.maxFrame - 1)) * (this.currentFrame - 1));
+    }
   }
 
   private processData(data) {
@@ -428,6 +449,27 @@ export class StoryMapComponent implements OnInit, OnDestroy {
       return 'after';
     }
     return 'before';
+  }
+
+  goToFrame(frame) {
+    this.togglePause(true);
+    this.currentFrame = frame;
+    this.frameChanged(this.currentFrame);
+    this.layersCorrectionFactor();
+    if (!this.histogram.pause) {
+      setTimeout(() => {
+        this.togglePause(false);
+      }, 1000);
+    }
+  }
+
+  togglePause(p) {
+    cancelAnimationFrame(this.requestAnimationFrameId);
+    this.pauseAllLayers();
+    this.layersCorrectionFactor();
+    if (!p) {
+      this.requestAnimationFrameId = requestAnimationFrame(this.animate.bind(this));
+    }
   }
 
   ngOnDestroy() {

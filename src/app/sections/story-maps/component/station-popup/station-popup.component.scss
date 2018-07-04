@@ -2,7 +2,7 @@
 :host {
   // width: 244px;
   border: 2px solid #F0F0F0;
-  border-radius: 0 0 2px 2px;
+  border-radius: 2px;
   background-color: #041E42;
   color: $colorSecondary1;
   display: block;
@@ -17,24 +17,6 @@
     right: 0;
     z-index: -1;
   }
-  // &:not(:hover) {
-  //   >* {
-  //     width: 0;
-  //     height: 0;
-  //     overflow: hidden;
-  //   }
-  //   .header, .content{
-  //     margin-top: 0;
-  //     padding-top: 0;
-  //   }
-  //   h5.info {
-  //     margin: 0;
-  //   }
-  //   .image {
-  //     width: 36px;
-  //     height: 36px;
-  //   }
-  // }
   &:hover {
     .allInfo {
       opacity: 1;
@@ -94,6 +76,9 @@
         font-size: 16px;
         @include font(bold);
       }
+      span {
+        @include font(regular);
+      }
     }
   }
   .content {
@@ -109,6 +94,12 @@
       }
       app-counter {
         display: inline-block;
+      }
+      sup {
+        font-size: 10px;
+        position: relative;
+        bottom: 6px;
+        margin-left: 1px;
       }
       span {
         font-size: 12px;
