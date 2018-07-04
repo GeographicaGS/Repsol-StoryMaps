@@ -8,6 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class GeoLogoComponent implements OnInit {
 
   @Input() geoHeight: String;
+  @Input() showCarto: Boolean;
+  @Input() whiteCarto = false;
 
   constructor() { }
 

@@ -1,9 +1,16 @@
 :host{
   display: flex;
   align-items: center;
+  background-color: rgba(0,0,0,0.08);
+  padding-left: 12px;
+  >a {
+    color: #9B9B9B;
+    font-size: 12px;
+    line-height: 12px;
+    margin-right: 6px;
+  }
   .carto{
     align-items: center;
-    margin-right: 18px;
     display: none;
   }
   .geo{

@@ -79,25 +79,21 @@
       background-color: $colorSecondary7;
       transition: transform $animationTimeFast $animationFuncAlt, opacity $animationTimeFast $animationFuncAlt $animationTimeFast;
       opacity: 0;
-      // &:after {
-      //   content: '';
-      //   position: absolute;
-      //   left: 50%;
-      //   top: 50%;
-      //   transform: translateY(-50%) translateX(-50%);
-      //   z-index: 1;
-      //   width: 12px;
-      //   height: 12px;
-      //   background-color: $colorWhite;
-      //   border-radius: 100%;
-      // }
     }
     .tooltip {
       position: absolute;
       z-index: 1;
       left: 0;
-      top: 0;
-      display: none;
+      top: -16px;
+      @include font(bold);
+      color: $colorWhite;
+      font-size: 12px;
+      line-height: 16px;
+      padding: 0 4px;
+      background-color: $colorSecondary7;
+      border-radius: 2px;
+      opacity: 0;
+      transition: transform $animationTimeFast $animationFuncAlt, opacity $animationTimeFast $animationFuncAlt $animationTimeFast;
     }
   }
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { UtilService, CounterDuration, CounterStep } from '../..';
-import { TransactionCategories, TransactionOilCategories } from '../..';
+import { UtilService, CounterDuration, CounterStep, TransactionCategories, TransactionOilCategories } from '../..';
 
 @Component({
   selector: 'app-category-tab',
@@ -13,37 +12,32 @@ export class CategoryTabComponent implements OnInit, OnDestroy {
   // @Input() maxOil: number = null;
   @Input() maxOil: number = null;
   @Input() maxNonOil: number = null;
+  @Input() dataAgg: any = null;
   @Input()
   set observableData(observable) {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.subscription = observable.subscribe((data) => {
-      const date = data.start.split('T')[0];
-      if (this.currentDate !== date) {
-        this.dataAgg = JSON.parse(JSON.stringify(data));
-        this.currentDate = date;
-        this.restartAgg = true;
-      } else {
-        this.restartAgg = false;
-        for (const key of Object.keys(data)) {
-          if (data[key]) {
-            this.dataAgg[key] += data[key];
-          }
+      // TODO El restartAgg no se debe mirar por el current frame porque da problemas si pegamos saltos en el histograma
+      this.restartAgg = this.currentFrame !== null || this.currentFrame > data.time_seq;
+      this.currentFrame = data.time_seq;
+      if (this.dataAgg !== null) {
+        this.sumCategories(this.dataAgg);
+        if (this.maxOil) {
+          this.valuePerOilBall = this.maxOil / this.totalCircles.length;
+          this.valuePerNonOilBall = this.maxNonOil / this.totalCircles.length;
+          this.ref.detectChanges();
         }
-      }
-      this.sumCategories(this.dataAgg);
-      if (this.maxOil) {
-        this.valuePerOilBall = this.maxOil / this.totalCircles.length;
-        this.valuePerNonOilBall = this.maxNonOil / this.totalCircles.length;
-        this.ref.detectChanges();
       }
     });
   }
 
   totalCircles = Array(16);
   subscription: Subscription;
+  currentFrame: number = null;
   valuePerOilBall: number;
   valuePerNonOilBall: number;
-  dataAgg: any = null;
-  currentDate: string = null;
   aggValueOil = 0;
   aggValueNonOil = 0;
   restartAgg = false;

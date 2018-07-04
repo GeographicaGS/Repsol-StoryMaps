@@ -1,3 +1,9 @@
+<a target="_blank" href="https://geographica.gs">© CARTO · Powered by</a>
+<a class="carto" [ngStyle]="{'display': showCarto ? 'flex':''}" href="https://carto.com/" target="_blank">
+  <img *ngIf="!whiteCarto" src="/assets/carto_positive.svg" alt="carto">
+  <img *ngIf="whiteCarto" src="/assets/carto_white.svg" alt="carto">
+</a>
+<a target="_blank" href="https://geographica.gs">Engineered by Geographica</a>
 <div class="geo" [ngStyle]="{'height.px': geoHeight, 'width.px': geoHeight}">
   <a href="https://geographica.gs" target="_blank">
     <img class="small" src="/assets/GEOGRAPHICA_ALT-NEG-24.svg" alt="geographica">

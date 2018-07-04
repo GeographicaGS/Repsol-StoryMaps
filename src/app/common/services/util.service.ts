@@ -15,4 +15,13 @@ export class UtilService {
     return 'es';
   }
 
+  getBeginningOfDay(date) {
+    const result = new Date(date.getTime());
+    result.setUTCHours(0);
+    result.setUTCMinutes(0);
+    result.setUTCSeconds(0);
+    result.setUTCMilliseconds(0);
+    return result;
+  }
+
 }
