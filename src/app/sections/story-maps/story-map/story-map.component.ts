@@ -460,8 +460,8 @@ export class StoryMapComponent implements OnInit, OnDestroy {
           this.stationData.sales += t.tot_cost;
           this.stationData.liters += t.tot_l;
           this.stationData.transactions += t.tot_transact;
+          this.stationData.incidences += t.tot_incid;
           this.stationData.quality = t.avg_e3;
-          this.stationData.incidences = t.tot_incid;
         }
       }
     }
