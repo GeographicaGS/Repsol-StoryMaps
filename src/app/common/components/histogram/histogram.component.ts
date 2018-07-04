@@ -118,22 +118,22 @@ export class HistogramComponent implements OnInit, OnDestroy {
   }
 
   private moveCursor() {
-    // const svg = d3.select(this.svg.nativeElement),
-    // cursor = d3.select(this.cursor.nativeElement),
-    // rect = svg.select(`rect[date="${this.date}"]`);
-    // if (rect._groups && rect._groups.length > 0 && rect._groups[0] && rect._groups[0].length > 0) {
-    //
-    //   const translateX = this.svg.nativeElement.getBoundingClientRect().left -
-    //                       this.svg.nativeElement.parentElement.getBoundingClientRect().left +
-    //                       parseFloat(rect._groups[0][0].getAttribute('x')) +
-    //                       Math.floor(rect._groups[0][0].getBoundingClientRect().width / 2) -
-    //                       Math.floor(cursor._groups[0][0].getBoundingClientRect().width / 2);
-    //
-    //   cursor.style(
-    //     'transform', `translateX(${translateX}px)`
-    //   ).style('opacity', 1)
-    //   ;
-    // }
+    const svg = d3.select(this.svg.nativeElement),
+    cursor = d3.select(this.cursor.nativeElement),
+    rect = svg.select(`rect[date="${this.date}"]`);
+    if (rect._groups && rect._groups.length > 0 && rect._groups[0] && rect._groups[0].length > 0) {
+
+      const translateX = this.svg.nativeElement.getBoundingClientRect().left -
+                          this.svg.nativeElement.parentElement.getBoundingClientRect().left +
+                          parseFloat(rect._groups[0][0].getAttribute('x')) +
+                          Math.floor(rect._groups[0][0].getBoundingClientRect().width / 2) -
+                          Math.floor(cursor._groups[0][0].getBoundingClientRect().width / 2);
+
+      cursor.style(
+        'transform', `translateX(${translateX}px)`
+      ).style('opacity', 1)
+      ;
+    }
   }
 
   private getTicksValues(data) {
