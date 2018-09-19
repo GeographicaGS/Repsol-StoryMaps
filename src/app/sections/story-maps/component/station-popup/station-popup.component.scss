@@ -53,11 +53,10 @@
     }
   }
   .tabs {
-    margin-top: 12px;
     display: flex;
     align-items: center;
     button {
-      flex-grow: 1;
+      flex: 1 1 50%;
       margin: 0;
       border: none;
       border-bottom: 2px solid #383D4C;
@@ -73,6 +72,13 @@
       }
       &.waylet {
         color: $colorWaylet;
+        padding: 8px 14px;
+        img {
+          width: 24px;
+          height: 24px;
+          border-radius: 8px;
+          margin-right: 8px;
+        }
       }
     }
   }
@@ -120,7 +126,7 @@
     padding: 0 14px;
   }
   .header {
-    margin-top: 12px;
+    margin: 12px 0;
     h3 {
       font-size: 14px;
       line-height: 14px;
