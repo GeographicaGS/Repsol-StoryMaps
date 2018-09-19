@@ -1,9 +1,48 @@
 $fontFamily: 'Roboto', sans-serif;
 $fontFamily: 'Oswald', sans-serif;
 
-$colorPrimary: #0255A5;
-$colorAccent: #1785FB;
-$colorSecondary: #C8B17B;
+@font-face {
+  font-family: 'titillium-semibold';
+  src: url('/assets/fonts/titillium-semibold-webfont.eot');
+  src: url('/assets/fonts/titillium-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/assets/fonts/titillium-semibold-webfont.woff2') format('woff2'),
+       url('/assets/fonts/titillium-semibold-webfont.woff') format('woff'),
+       url('/assets/fonts/titillium-semibold-webfont.ttf')  format('truetype'),
+       url('/assets/fonts/titillium-semibold-webfont.svg#svgFontName') format('svg');
+}
+
+@font-face {
+  font-family: 'titillium-bold';
+  src: url('/assets/fonts/titillium-bold-webfont.eot');
+  src: url('/assets/fonts/titillium-bold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/assets/fonts/titillium-bold-webfont.woff2') format('woff2'),
+       url('/assets/fonts/titillium-bold-webfont.woff') format('woff'),
+       url('/assets/fonts/titillium-bold-webfont.ttf')  format('truetype'),
+       url('/assets/fonts/titillium-bold-webfont.svg#svgFontName') format('svg');
+}
+
+@font-face {
+  font-family: 'repsolviet-regular';
+  src: url('/assets/fonts/repsolviet-regular-webfont.eot');
+  src: url('/assets/fonts/repsolviet-regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/assets/fonts/repsolviet-regular-webfont.woff2') format('woff2'),
+       url('/assets/fonts/repsolviet-regular-webfont.woff') format('woff'),
+       url('/assets/fonts/repsolviet-regular-webfont.ttf')  format('truetype'),
+       url('/assets/fonts/repsolviet-regular-webfont.svg#svgFontName') format('svg');
+}
+
+$colorWaylet: #FF8200;
+$colorOpen: #0CB200;
+$colorPrimary: #e67600;
+$colorSecondary1: #E0DED9;
+$colorSecondary2: #9C9081;
+$colorSecondary3: #5C4E44;
+$colorSecondary4: #007E94;
+$colorSecondary5: #6A972C;
+$colorSecondary6: #E40028;
+$colorSecondary7: #041E42;
+$colorSecondary8: #003B5C;
+$colorSecondary9: #FFB81C;
 
 $colorBlack: #000;
 $colorN100: #191919;

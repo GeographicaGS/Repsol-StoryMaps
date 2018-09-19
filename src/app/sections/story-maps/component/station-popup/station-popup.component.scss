@@ -1,0 +1,176 @@
+@import "common.scss";
+:host {
+  // width: 244px;
+  border: 2px solid #F0F0F0;
+  border-radius: 2px;
+  background-color: #041E42;
+  color: $colorSecondary1;
+  display: block;
+
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+  }
+  button.close {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+    z-index: 1;
+    padding: 4px;
+    width: 20px;
+    height: 20px;
+    &:before {
+      @include pseudoElemIcon('/assets/icons/close.svg', 12px, 12px);
+    }
+  }
+  .open-label {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 0 4px;
+    border-radius: 2px;
+    background-color: $colorOpen;
+    color: $colorWhite;
+    font-size: 12px;
+    line-height: 16px;
+    @include font(bold);
+  }
+  .services {
+    img {
+      width: 24px;
+      height: 24px;
+      margin-left: 12px;
+      margin-top: 12px;
+    }
+  }
+  .tabs {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    button {
+      flex-grow: 1;
+      margin: 0;
+      border: none;
+      border-bottom: 2px solid #383D4C;
+      background: transparent;
+      color: $colorSecondary4;
+      @include font(medium);
+      font-size: 14px;
+      line-height: 14px;
+      padding: 14px;
+      text-align: center;
+      &.selected {
+        border-color: currentColor;
+      }
+      &.waylet {
+        color: $colorWaylet;
+      }
+    }
+  }
+  &.open {
+    .allInfo {
+      opacity: 1;
+      pointer-events: auto;
+      width: auto;
+      height: auto;
+      width: 244px;
+      max-height: 445px;
+      transition: opacity $animationTimeFast $animationFuncAlt $animationTimeFast, width $animationTimeFast $animationFuncAlt, max-height $animationTimeFast $animationFuncAlt;
+      position: relative;
+    }
+    .imageMini {
+      opacity: 0;
+      overflow: hidden;
+      width: 0;
+      height: 0;
+      transition: opacity $animationTimeFast $animationFuncAlt, width $animationTimeFast $animationFuncAlt, height $animationTimeFast $animationFuncAlt;
+    }
+  }
+  .allInfo {
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    width: 0;
+    max-height: 0;
+    transition: opacity $animationTimeFast $animationFuncAlt, width $animationTimeFast $animationFuncAlt $animationTimeFast, max-height $animationTimeFast $animationFuncAlt $animationTimeFast;
+  }
+  .imageMini, .image {
+    background-size: cover;
+    background-position: center;
+  }
+  .imageMini {
+    width: 36px;
+    height: 36px;
+    transition: opacity $animationTimeFast $animationFuncAlt $animationTimeFast, width $animationTimeFast $animationFuncAlt $animationTimeFast, height $animationTimeFast $animationFuncAlt $animationTimeFast;
+  }
+  .image {
+    width: 100%;
+    height: 160px;
+  }
+  .header, .content {
+    padding: 0 14px;
+  }
+  .header {
+    margin-top: 12px;
+    h3 {
+      font-size: 14px;
+      line-height: 14px;
+      @include font(semibold);
+      color: $colorPrimary;
+    }
+    >div {
+      font-size: 12px;
+      line-height: 16px;
+      margin-top: 2px;
+      app-counter {
+        display: inline-block;
+        font-size: 16px;
+        @include font(bold);
+      }
+      span {
+        @include font(regular);
+      }
+    }
+  }
+  .content {
+    padding-top: 12px;
+    >div {
+      font-size: 16px;
+      @include font(regular);
+      line-height: 16px;
+      &+div {
+        margin-top: 2px;
+      }
+      app-counter {
+        display: inline-block;
+      }
+      sup {
+        font-size: 10px;
+        position: relative;
+        bottom: 6px;
+        margin-left: 1px;
+      }
+      span {
+        font-size: 12px;
+      }
+    }
+  }
+  h5.info {
+    margin: 16px 0 18px 0;
+    color: $colorSecondary2;
+    font-size: 12px;
+    line-height: 12px;
+    @include font(bold);
+    padding-right: 14px;
+    text-align: right;
+  }
+}

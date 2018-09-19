@@ -1,0 +1,56 @@
+<div *ngIf="data.image" 
+  class="imageMini" 
+  [ngStyle]="{'background-image': 'url(/assets/stations/' + data.image + ')'}"
+  (click)="open = true"></div>
+<button *ngIf="open" (click)="open = false" class="close"></button>
+<div class="allInfo">
+  <div class="open-label">{{'Abierta' | translate}}</div>
+  <div *ngIf="data.image" class="image" [ngStyle]="{'background-image': 'url(/assets/stations/' + data.image + ')'}"></div>
+  <div class="services">
+    <img src="/assets/icons/services/24hours.svg" alt="24 hours">
+    <img src="/assets/icons/services/premium-gas.svg" alt="premium gas">
+    <img src="/assets/icons/services/auto-gas.svg" alt="auto gas">
+    <img src="/assets/icons/services/washing-tunnel.svg" alt="washing tunnel">
+    <img src="/assets/icons/services/shop.svg" alt="shop">
+    <img src="/assets/icons/services/burger-king.svg" alt="burguer king">
+  </div>
+  <div class="header">
+    <h3>{{'Estación' | translate}} {{data.name}}</h3>
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.sales" [unit]="'€'" [duration]="counterDuration"></app-counter>
+      <span>{{'venta' | translate}}</span>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="summary" 
+      [class.selected]="currentTab === 'summary'"
+      (click)="setTab('summary')">
+      {{'Resumen' | translate}}
+    </button>
+    <button class="waylet" 
+      [class.selected]="currentTab === 'waylet'"
+      (click)="setTab('waylet')">
+      {{'Waylet' | translate}}
+    </button>
+  </div>
+  <div class="content">
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.liters" [duration]="counterDuration"></app-counter>
+      m<sup>3</sup>
+      <span>{{'de combustible' | translate}}</span>
+    </div>
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.transactions" [duration]="counterDuration"></app-counter>
+      <span>{{'transacciones' | translate}}</span>
+    </div>
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.incidences" [duration]="counterDuration"></app-counter>
+      <span>{{'incidencias' | translate}}</span>
+    </div>
+    <div>
+      <app-counter [step]="counterStep" [countTo]="data.quality" [unit]="'/10'" [format]="'1.0-2'" [duration]="counterDuration"></app-counter>
+      <span>{{'Calidad E3 trimestral' | translate}}</span>
+    </div>
+  </div>
+  <h5 class="info">{{'Datos acumulados diario' | translate}}</h5>
+</div>
