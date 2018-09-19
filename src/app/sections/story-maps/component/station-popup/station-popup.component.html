@@ -14,7 +14,7 @@
     <img src="/assets/icons/services/shop.svg" alt="shop">
     <img src="/assets/icons/services/burger-king.svg" alt="burguer king">
   </div>
-  <div class="header">
+  <div class="header" *ngIf="currentTab === 'summary'">
     <h3>{{'Estación' | translate}} {{data.name}}</h3>
     <div>
       <app-counter [step]="counterStep" [countTo]="data.sales" [unit]="'€'" [duration]="counterDuration"></app-counter>
@@ -35,6 +35,11 @@
     </button>
   </div>
   <ng-container *ngIf="currentTab === 'waylet'">
+    <div class="waylet-item" *ngFor="let item of featuredWaylet">
+      <span>{{item.id}}</span>
+      <small>{{item.date | date: 'dd MMM HH:mm'}}</small>
+      <strong>{{item.amount}} €</strong>
+    </div>
     <h5 class="info">{{'Operación destacada con Waylet / hora' | translate}}</h5>
   </ng-container>
   <ng-container *ngIf="currentTab === 'summary'">

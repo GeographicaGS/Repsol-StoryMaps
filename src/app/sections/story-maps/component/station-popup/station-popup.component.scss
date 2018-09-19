@@ -71,6 +71,9 @@
         border-color: currentColor;
       }
       &.waylet {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: $colorWaylet;
         padding: 8px 14px;
         img {
@@ -80,6 +83,24 @@
           margin-right: 8px;
         }
       }
+    }
+  }
+  .waylet-item {
+    padding: 12px 14px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #383D4C;
+    small {
+      font-size: 12px;
+      margin: 0 12px;
+    }
+    strong {
+      @include font(bold);
+    }
+    span {
+      flex-grow: 1;
     }
   }
   &.open {
