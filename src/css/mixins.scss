@@ -1,22 +1,17 @@
-@mixin font($weight: normal, $condensed: false) {
-  @if $weight == extra-light {
-    font-weight: 200;
-  } @else if $weight == light {
-    font-weight: 300;
-  } @else if $weight == normal {
-    font-weight: 400;
-  } @else if $weight == medium {
-    font-weight: 500;
-  } @else if $weight == bold {
-    font-weight: 700;
-  } @else if $weight == black {
-    font-weight: 900;
+@mixin font($font: normal, $weight: false) {
+  @if $font == regular {
+    font-family: 'titillium-regular', sans-serif;
+  } @else if $font == semibold {
+    font-family: 'titillium-semibold', sans-serif;
+  } @else if $font == bold {
+    font-family: 'titillium-bold', sans-serif;
+  }@else if $font == repsolviet {
+    font-family: 'repsolviet-regular', sans-serif;
   }
-  @if $condensed == condensed {
-    font-family: $fontFamilyCondensed;
-  } @else {
-    font-family: $fontFamily;
+  @if $weight {
+    font-weight: $weight;
   }
+
 }
 
 @mixin pseudoElemIcon($file, $height, $width) {

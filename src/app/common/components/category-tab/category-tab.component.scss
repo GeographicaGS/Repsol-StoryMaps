@@ -1,0 +1,177 @@
+@import "common.scss";
+:host {
+  border: 2px solid rgba(255,255,255,0.16);
+  min-width: 217px;
+  // min-height: 502px;;
+  position: relative;
+  clip-path: polygon(50% 0%, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 0);
+  background-color: rgba(0,16,24,0.92);
+  border-bottom-right-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  &:after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    width: 33px;
+    height: 2px;
+    background-color: #3A464B;
+    transform: rotate(-45deg);
+    bottom: 10px;
+    right: -6px;
+  }
+  >* {
+    margin: 0 16px;
+  }
+  h3 {
+    color: $colorSecondary1;
+  }
+  h3 {
+    margin-top: 13px;
+    @include font('semibold');
+    font-size: 16px;
+    line-height: 16px
+  }
+
+  .counters {
+    margin-top: 8px;
+    >div {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      line-height: 24px;
+      @include font('repsolviet', normal);
+      h4 {
+        color: $colorSecondary2;
+        font-style: italic;
+      }
+      app-counter {
+        color: $colorWhite;
+        margin-left: 8px;
+      }
+    }
+  }
+  // app-counter {
+  //   margin-top: 8px;
+  //   @include font('repsolviet', bold);
+  //   font-size: 32px;
+  //   line-height: 32px;
+  // }
+  .categories {
+    flex: 1 1 100%;
+    display: flex;
+    margin-top: 12px;
+    &.inverCircleTransition{
+      .group >div .category {
+        .circle {
+          @for $i from 20 through 1 {
+            &:nth-child(#{$i}) {
+              transition-delay: #{$i * 0.025}s;
+            }
+          }
+        }
+      }
+    }
+    &:not(.inverCircleTransition){
+      .group >div .category {
+        .circle {
+          @for $i from 20 through 1 {
+            &:nth-child(#{$i}) {
+              transition-delay: #{(20 - $i) * 0.075}s;
+            }
+          }
+        }
+      }
+    }
+    .group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 16px;
+      &+.group {
+        margin-left: 17px;
+        padding-left: 16px;
+        border-left: 2px solid rgba(255,255,255,0.16)
+      }
+      >div {
+        display: flex;
+        .category {
+          display: flex;
+          flex-direction: column;
+          &+.category {
+            margin-left: 12px;
+          }
+          &.orange {
+            span {
+              color: $colorSecondary9;
+            }
+          }
+          &.red {
+            span {
+              color: $colorSecondary6;
+            }
+          }
+          &.blue {
+            span {
+              color: #4A90E2
+            }
+          }
+          &.grey {
+            color: $colorSecondary2;
+          }
+          .circle {
+            width: 12px;
+            height: 12px;
+            transition: background-color $animationTimeBlink $animationFuncAlt;
+            border-radius: 100%;
+            background-color: transparent;
+            position: relative;
+            &:after {
+              content: '';
+              position: absolute;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              top: 0;
+              background-color: #1F2B32;
+              z-index: -1;
+              border-radius: 100%;
+            }
+            &+.circle{
+              margin-top: 2px;
+            }
+          }
+          .label {
+            display: inline-block;
+            width: 0;
+            line-height: 0;
+            margin-top: 12px;
+            span {
+              display: inline-block;
+              white-space: nowrap;
+              transform: translate(0,100%) rotate(-90deg);
+              vertical-align: bottom;
+              transform-origin: 0 0;
+              line-height: 12px;
+              @include font('bold');
+              font-size: 14px;
+              &:before {
+                content: "";
+                float: left;
+                margin-top: 100%;
+              }
+            }
+          }
+        }
+      }
+      .title {
+        color: $colorSecondary2;
+        font-size: 14px;
+        @include font(bold);
+        font-style: italic;
+        margin-top: auto;
+        padding-top: 16px;
+      }
+    }
+  }
+}

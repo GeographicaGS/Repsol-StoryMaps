@@ -1,1 +1,62 @@
-<app-map [bbox]="bbox" [lens]="true"></app-map>
+<div class="header topTransition" *ngIf="mapReady">
+  <h3>{{'Histograma de venta total / hora' | translate}}</h3>
+  <app-histogram #histogram
+    [data]="data"
+    (frameSelected)="goToFrame($event)"
+    (paused)="togglePause($event)"
+    [observableDate]="storyMapService.currentData"
+    ></app-histogram>
+</div>
+<app-map [bbox]="bbox" [lens]="true" [navigationControl]="true"></app-map>
+<div class="summary leftTransition"  *ngIf="mapReady">
+  <div>
+    <div class="mask">
+      <h2 class="{{getCarouselPosition(0,3)}}">{{'Venta diaria €' | translate }}</h2>
+      <h2 class="{{getCarouselPosition(4,8)}}">{{'Litros diarios' | translate }}</h2>
+      <h2 class="{{getCarouselPosition(9,13)}}">{{'Transacciones diarias' | translate }}</h2>
+      <h2 class="{{getCarouselPosition(14,18)}}">{{'Incidencias diarias' | translate }}</h2>
+      <h2 class="{{getCarouselPosition(19,23)}}">{{'Calidad media (E3)' | translate }}</h2>
+    </div>
+    <div class="mask">
+      <app-counter class="current {{getCarouselPosition(0,3)}}" [step]="counterStep" [countTo]="accumulatedDaily.totalSales" [duration]="counterDuration"></app-counter>
+      <app-counter class="current {{getCarouselPosition(4,8)}}" [step]="counterStep" [countTo]="accumulatedDaily.liters" [duration]="counterDuration"></app-counter>
+      <app-counter class="current {{getCarouselPosition(9,13)}}" [step]="counterStep" [countTo]="accumulatedDaily.transactionsNumber" [duration]="counterDuration"></app-counter>
+      <app-counter class="current {{getCarouselPosition(14,18)}}" [step]="counterStep" [countTo]="accumulatedDaily.tot_incid" [duration]="counterDuration"></app-counter>
+      <app-counter class="current {{getCarouselPosition(19,23)}}" [step]="counterStep" [countTo]="accumulatedDaily.quality" [duration]="counterDuration" [format]="'1.0-2'"></app-counter>
+    </div>
+  </div>
+  <div *ngIf="(currentFrame % 24) < 19 && (salesComparedPreviousDay !== null || litersComparedPreviousDay !==null || transactionsComparedPreviousDay !== null || qualityComparedPreviousDay !== null)" class="opacityTransition">
+    <h3>{{'Variación con respecto' | translate}}<br>{{'a la misma hora del día anterior' | translate}}</h3>
+    <div class="mask">
+      <app-counter class="compared {{salesComparedPreviousDay >= 0 ? 'positive': ''}} {{getCarouselPosition(0,3)}}" [showSimbol]="true" [step]="counterStep" [countTo]="salesComparedPreviousDay" [unit]="'€'" [duration]="counterDuration"></app-counter>
+      <app-counter class="compared {{litersComparedPreviousDay >= 0 ? 'positive': ''}} {{getCarouselPosition(4,8)}}" [showSimbol]="true" [step]="counterStep" [countTo]="litersComparedPreviousDay"  [unit]="'litros' | translate" [duration]="counterDuration"></app-counter>
+      <app-counter class="compared {{transactionsComparedPreviousDay >= 0 ? 'positive': ''}} {{getCarouselPosition(9,13)}}" [showSimbol]="true" [step]="counterStep" [countTo]="transactionsComparedPreviousDay" [unit]="'transacciones' | translate" [duration]="counterDuration"></app-counter>
+      <app-counter class="compared {{incidencesComparedPreviousDay >= 0 ? 'positive': ''}} {{getCarouselPosition(14,18)}}" [showSimbol]="true" [step]="counterStep" [countTo]="incidencesComparedPreviousDay" [unit]="'incidencias' | translate" [duration]="counterDuration"></app-counter>
+      <!-- <app-counter class="compared {{qualityComparedPreviousDay >= 0 ? 'positive': ''}} {{getCarouselPosition(19,23)}}" [showSimbol]="true" [step]="counterStep" [countTo]="qualityComparedPreviousDay" [duration]="counterDuration" [format]="'1.0-2'"></app-counter> -->
+    </div>
+  </div>
+</div>
+<app-category-tab *ngIf="mapReady" class="leftTransition" [maxOil]="limits?.oil.max" [maxNonOil]="limits?.nonOil.max" [dataAgg]="accumulatedDaily" [observableData]="storyMapService.currentData"></app-category-tab>
+<div class="title">
+  <img height="46" src="/assets/symbol-repsol.png">
+  <div>
+    <h3>{{'Consumo' | translate}}</h3>
+    <h1>{{'Operación salida verano 2017' | translate}}</h1>
+    <div class="legend">
+      <div class="circles"><span></span><span></span><span></span><p>{{'Mapa de Volumen de ventas por estación' | translate}}</p></div>
+      <div class="ramp"><p>{{'Intensidad del tráfico' | translate}}: {{'Baja' | translate}}</p> <span></span><span></span><span></span><span></span> <p>{{'Alta' | translate}}</p></div>
+    </div>
+  </div>
+</div>
+<div *ngIf="mapReady && stationData.name !== null" class="stationDetail opacityTransition">
+  <h3>{{'Venta acumulada diaria €' | translate }}</h3>
+  <div>
+    <app-counter [step]="counterStep" [countTo]="stationData.sales" [duration]="counterDuration"></app-counter>
+    €
+  </div>
+  <h4>{{'E.S.' | translate}} {{stationData.name}} · <span>{{stationData.address}}</span></h4>
+</div>
+
+<app-geo-logo [geoHeight]="24" [showCarto]="true" [whiteCarto]="true"></app-geo-logo>
+
+<app-station-popup #stationPopupEl [data]="stationData">{{currentFrame}}</app-station-popup>

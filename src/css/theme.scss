@@ -1,5 +1,12 @@
-$fontFamily: 'Roboto', sans-serif;
-$fontFamily: 'Oswald', sans-serif;
+@font-face {
+  font-family: 'titillium-regular';
+  src: url('/assets/fonts/titillium-regular-webfont.eot');
+  src: url('/assets/fonts/titillium-regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/assets/fonts/titillium-regular-webfont.woff2') format('woff2'),
+       url('/assets/fonts/titillium-regular-webfont.woff') format('woff'),
+       url('/assets/fonts/titillium-regular-webfont.ttf')  format('truetype'),
+       url('/assets/fonts/titillium-regular-webfont.svg#svgFontName') format('svg');
+}
 
 @font-face {
   font-family: 'titillium-semibold';
