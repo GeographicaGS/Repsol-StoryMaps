@@ -34,14 +34,14 @@
       {{'Waylet' | translate}}
     </button>
   </div>
-  <ng-container *ngIf="currentTab === 'waylet'">
+  <div class="waylet-wrapper" *ngIf="currentTab === 'waylet'">
     <div class="waylet-item" *ngFor="let item of featuredWaylet">
       <span>{{item.id}}</span>
       <small>{{item.date | date: 'dd MMM HH:mm'}}</small>
       <strong>{{item.amount}} €</strong>
     </div>
     <h5 class="info">{{'Operación destacada con Waylet / hora' | translate}}</h5>
-  </ng-container>
+  </div>
   <ng-container *ngIf="currentTab === 'summary'">
     <div class="content">
       <div>

@@ -19,6 +19,26 @@ export class StationPopupComponent {
       id: '1234',
       date: new Date(),
       amount: 87.20
+    },
+    {
+      id: '1234',
+      date: new Date(),
+      amount: 87.20
+    },
+    {
+      id: '1234',
+      date: new Date(),
+      amount: 87.20
+    },
+    {
+      id: '1234',
+      date: new Date(),
+      amount: 87.20
+    },
+    {
+      id: '1234',
+      date: new Date(),
+      amount: 87.20
     }
   ];
 
