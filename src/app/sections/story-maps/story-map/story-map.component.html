@@ -25,6 +25,11 @@
       <app-counter class="current {{getCarouselPosition(19,23)}}" [step]="counterStep" [countTo]="accumulatedDaily.quality" [duration]="counterDuration" [format]="'1.0-2'"></app-counter>
     </div>
   </div>
+  <div class="mask waylet-global">
+    <app-counter unit="%" format="1.2-2" class="current {{getCarouselPosition(0,3)}}" [step]="counterStep" [countTo]="accumulatedDaily.perc_waylet" [duration]="counterDuration"></app-counter>
+    <app-counter unit="%" format="1.2-2" class="current {{getCarouselPosition(4,8)}}" [step]="counterStep" [countTo]="accumulatedDaily.l_waylet_perc" [duration]="counterDuration"></app-counter>
+    <app-counter unit="%" format="1.2-2" class="current {{getCarouselPosition(9,13)}}" [step]="counterStep" [countTo]="accumulatedDaily.transact_waylet_perc" [duration]="counterDuration"></app-counter>
+  </div>
   <div *ngIf="(currentFrame % 24) < 19 && (salesComparedPreviousDay !== null || litersComparedPreviousDay !==null || transactionsComparedPreviousDay !== null || qualityComparedPreviousDay !== null)" class="opacityTransition">
     <h3>{{'Variación con respecto' | translate}}<br>{{'a la misma hora del día anterior' | translate}}</h3>
     <div class="mask">

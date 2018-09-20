@@ -68,7 +68,7 @@
       // flex-direction: column;
       // justify-content: space-between;
       &:first-child {
-        flex: 1 0 340px;
+        flex: 1 0 310px;
       }
       h2 {
         color: $colorSecondary1;
@@ -104,6 +104,34 @@
         @include font('semibold');
         font-size: 14px;
         line-height: 16px;
+      }
+    }
+  }
+  .waylet-global {
+    margin-top: 32px;
+    margin-left: 24px;
+    margin-right: 32px;
+    font-size: 72px;
+    @include font('repsolviet');
+    app-counter {
+      padding-left: 60px;
+      margin-right: 24px;
+      position: relative;
+      &:before {
+        @include pseudoElemIcon('/assets/waylet.png', 48px, 48px);
+        border-radius: 8px;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+      }
+      /deep/ {
+        h4 {
+          color: $colorWaylet;
+        }
+        .unit {
+          font-size: 48px;
+        }
       }
     }
   }
