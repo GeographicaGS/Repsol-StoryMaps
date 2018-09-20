@@ -283,6 +283,30 @@
         // color: $colorSecondary6;
       }
     }
+    .counters {
+      display: flex;
+      align-items: flex-end;
+    }
+    app-counter.waylet {
+      position: relative;
+      padding-left: 32px;
+      padding-right: 16px;
+      padding-bottom: 8px;
+      &:before {
+        @include pseudoElemIcon('/assets/waylet.png', 24px, 24px);
+        border-radius: 8px;
+        position: absolute;
+        left: 0;
+        top: 6px;
+      }
+      /deep/ {
+        h4 {
+          color: $colorWaylet;
+          font-size: 32px;
+          line-height: 32px;
+        }
+      }
+    }
   }
 
   >app-station-popup {

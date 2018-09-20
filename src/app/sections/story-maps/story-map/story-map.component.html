@@ -55,7 +55,8 @@
 </div>
 <div *ngIf="mapReady && stationData.name !== null" class="stationDetail opacityTransition">
   <h3>{{'Venta acumulada diaria €' | translate }}</h3>
-  <div>
+  <div class="counters">
+    <app-counter class="waylet" unit="%" format="1.2-2" [step]="counterStep" [countTo]="stationData.percWaylet" [duration]="counterDuration"></app-counter>
     <app-counter [step]="counterStep" [countTo]="stationData.sales" [duration]="counterDuration"></app-counter>
     €
   </div>
