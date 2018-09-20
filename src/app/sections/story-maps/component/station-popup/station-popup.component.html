@@ -1,3 +1,4 @@
+<div *ngIf="open" class="temp" [class.sun]="data.sun">{{data.temp | number: '1.0-0'}}º</div>
 <div *ngIf="data.image" 
   class="imageMini" 
   [ngStyle]="{'background-image': 'url(/assets/stations/' + data.image + ')'}"

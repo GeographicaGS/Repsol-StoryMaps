@@ -32,6 +32,26 @@
       @include pseudoElemIcon('/assets/icons/close.svg', 12px, 12px);
     }
   }
+  .temp {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    margin-left: 6px;
+    padding: 0 6px;
+    border: 4px solid $colorTempBorder;
+    background-color: $colorTempBg;
+    font-size: 48px;
+    line-height: 1;
+    white-space: nowrap;
+    @include font('repsolviet');
+    &:before {
+      @include pseudoElemIcon('/assets/icons/weather/moon.svg', 28px, 28px);
+      margin-right: 6px;
+    }
+    &.sun:before {
+      background-image: url('/assets/icons/weather/sun.svg');
+    }
+  }
   .open-label {
     position: absolute;
     top: 14px;
