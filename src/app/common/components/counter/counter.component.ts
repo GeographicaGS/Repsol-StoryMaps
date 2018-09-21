@@ -48,7 +48,7 @@ export class CounterComponent implements OnInit {
       this.decimalPipe.transform(e, this.format, this.utilService.getLocale())
     ;
     if (this.unit) {
-      this.counter.nativeElement.innerHTML += ` <span>${this.unit}</span>`;
+      this.counter.nativeElement.innerHTML += ` <span class="unit">${this.unit}</span>`;
     }
   }
 

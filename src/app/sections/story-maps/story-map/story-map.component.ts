@@ -33,6 +33,11 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   @ViewChild('stationPopupEl', { read: ElementRef }) stationPopupEl: ElementRef;
   @ViewChild('histogram') histogram: HistogramComponent;
   stationData = {
+    sun: false,
+    temp: 0,
+    listWaylet: [],
+    percWaylet: 0,
+    costWaylet: 0,
     sales: 0,
     liters: 0,
     transactions: 0,
@@ -78,6 +83,12 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   requestAnimationFrameId: number;
 
   accumulatedDaily = {
+    l_waylet: 0,
+    l_waylet_perc: 0,
+    transact_waylet: 0,
+    transact_waylet_perc: 0,
+    perc_waylet: 0,
+    cost_waylet: 0,
     totalSales: 0,
     liters: 0,
     transactionsNumber: 0,
@@ -105,6 +116,8 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   globalTimestampAnimation: number;
   routingTimestampAnimation: number;
   transactionRoutinDuration: number;
+
+  sqlClient = new CartoDB.SQL({user: environment.cartoUser});
 
   constructor(
     private zone: NgZone,
@@ -137,9 +150,10 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   private mapsLoaded() {
     this.mapReady = true;
     this.createFocusMarker();
-    new CartoDB.SQL({user: environment.cartoUser}).execute(`
+    this.sqlClient.execute(`
       select
-      cost_diesel, cost_gasoline, cost_shop, cost_wash, start, tot_transact, tot_l, avg_e3, tot_incid, time_seq
+        cost_waylet, transact_waylet, l_waylet,
+        cost_diesel, cost_gasoline, cost_shop, cost_wash, start, tot_transact, tot_l, avg_e3, tot_incid, time_seq
       from repsol_transact_summary_agg_1h order by start`
     )
     .done((data) => {
@@ -387,6 +401,21 @@ export class StoryMapComponent implements OnInit, OnDestroy {
           this.accumulatedDaily.totalSales += d[t];
           this.accumulatedDaily[t] += d[t];
         }
+        this.accumulatedDaily.cost_waylet += d.cost_waylet || 0;
+        this.accumulatedDaily.perc_waylet = 100 * (
+          this.accumulatedDaily.cost_waylet / this.accumulatedDaily.totalSales
+        );
+
+        this.accumulatedDaily.l_waylet += d.l_waylet || 0;
+        this.accumulatedDaily.l_waylet_perc = 100 * (
+          this.accumulatedDaily.l_waylet / this.accumulatedDaily.liters
+        );
+
+        this.accumulatedDaily.transact_waylet += d.transact_waylet || 0;
+        this.accumulatedDaily.transact_waylet_perc = 100 * (
+          this.accumulatedDaily.transact_waylet / this.accumulatedDaily.transactionsNumber
+        );
+
         this.accumulatedDaily.liters += d.tot_l;
         this.accumulatedDaily.transactionsNumber = d.tot_transact;
         this.accumulatedDaily.tot_incid += d.tot_incid;
@@ -421,8 +450,11 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.stationData.address = scene.st_address;
     this.stationData.image = scene.image;
     this.transactStDetails = [];
-    new CartoDB.SQL({user: environment.cartoUser}).execute(`
-      select time_seq, tot_cost, tot_l, tot_transact, avg_e3, tot_incid, start from repsol_transact_st_detail_1h
+    this.sqlClient.execute(`
+      select cost_waylet, id_waylet, nivel_waylet,
+        sun, temp,
+        time_seq, tot_cost, tot_l, tot_transact, avg_e3, tot_incid, start
+      from repsol_transact_st_detail_1h
       where cod_establecimiento_sr = '${scene.st_id}' order by time_seq;
     `).done((data) => {
       this.transactStDetails = data.rows;
@@ -445,11 +477,14 @@ export class StoryMapComponent implements OnInit, OnDestroy {
 
   private processStationDetails() {
     const currentData = this.data.find(t => t.time_seq === this.currentFrame);
+    this.stationData.costWaylet = 0;
+    this.stationData.percWaylet = 0;
     this.stationData.sales = 0;
     this.stationData.liters = 0;
     this.stationData.transactions = 0;
     this.stationData.incidences = 0;
     this.stationData.quality = 0;
+    this.stationData.temp = 0;
 
     if (currentData) {
       const currentDate = this.utilService.getBeginningOfDay(currentData.start);
@@ -462,6 +497,21 @@ export class StoryMapComponent implements OnInit, OnDestroy {
           this.stationData.transactions += t.tot_transact;
           this.stationData.incidences += t.tot_incid;
           this.stationData.quality = t.avg_e3;
+          if (t.id_waylet) {
+            if (this.stationData.listWaylet.length >= 5) {
+              this.stationData.listWaylet.pop();
+            }
+            this.stationData.listWaylet.unshift({
+              level: t.nivel_waylet,
+              amount: t.cost_waylet,
+              id: t.id_waylet,
+              date: t.start
+            });
+          }
+          this.stationData.costWaylet += t.cost_waylet || 0;
+          this.stationData.percWaylet = 100 * (this.stationData.costWaylet / this.stationData.sales);
+          this.stationData.temp = t.temp;
+          this.stationData.sun = t.sun;
         }
       }
     }

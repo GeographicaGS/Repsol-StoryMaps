@@ -68,7 +68,7 @@
       // flex-direction: column;
       // justify-content: space-between;
       &:first-child {
-        flex: 1 0 340px;
+        flex: 1 0 auto;
       }
       h2 {
         color: $colorSecondary1;
@@ -104,6 +104,34 @@
         @include font('semibold');
         font-size: 14px;
         line-height: 16px;
+      }
+    }
+  }
+  .waylet-global {
+    margin-top: 20px;
+    margin-left: 24px;
+    margin-right: 32px;
+    font-size: 72px;
+    @include font('repsolviet');
+    app-counter {
+      padding-left: 60px;
+      margin-right: 24px;
+      position: relative;
+      &:before {
+        @include pseudoElemIcon('/assets/waylet.png', 48px, 48px);
+        border-radius: 8px;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+      }
+      /deep/ {
+        h4 {
+          color: $colorWaylet;
+        }
+        .unit {
+          font-size: 48px;
+        }
       }
     }
   }
@@ -253,6 +281,30 @@
       text-shadow: -1px 0 #001018, 0 1px #001018, 1px 0 #001018, 0 -1px #001018;
       span {
         // color: $colorSecondary6;
+      }
+    }
+    .counters {
+      display: flex;
+      align-items: flex-end;
+    }
+    app-counter.waylet {
+      position: relative;
+      padding-left: 32px;
+      padding-right: 16px;
+      padding-bottom: 8px;
+      &:before {
+        @include pseudoElemIcon('/assets/waylet.png', 24px, 24px);
+        border-radius: 8px;
+        position: absolute;
+        left: 0;
+        top: 6px;
+      }
+      /deep/ {
+        h4 {
+          color: $colorWaylet;
+          font-size: 32px;
+          line-height: 32px;
+        }
       }
     }
   }
