@@ -497,13 +497,14 @@ export class StoryMapComponent implements OnInit, OnDestroy {
           this.stationData.transactions += t.tot_transact;
           this.stationData.incidences += t.tot_incid;
           this.stationData.quality = t.avg_e3;
-          if (t.cost_waylet) {
-            this.stationData.listWaylet = this.stationData.listWaylet.concat({
-              nivel_waylet: t.nivel_waylet,
-              cost_waylet: t.cost_waylet,
-              id_waylet: t.id_waylet,
-              start: t.start
-            }).slice(-5);
+          if (t.id_waylet) {
+            this.stationData.listWaylet.unshift({
+              level: t.nivel_waylet,
+              amount: t.cost_waylet,
+              id: t.id_waylet.replace('WY', ''),
+              date: t.start
+            });
+            this.stationData.listWaylet.splice(5);
           }
           this.stationData.costWaylet += t.cost_waylet || 0;
           this.stationData.percWaylet = 100 * (this.stationData.costWaylet / this.stationData.sales);

@@ -140,6 +140,19 @@
     }
     span {
       flex-grow: 1;
+      font-size: 14px;
+    }
+    .platino {
+      
+    }
+    .oro {
+
+    }
+    .plata {
+
+    }
+    .bronce {
+
     }
   }
   &.open {
@@ -148,7 +161,7 @@
       pointer-events: auto;
       width: auto;
       height: auto;
-      width: 244px;
+      width: 260px;
       max-height: 445px;
       transition: opacity $animationTimeFast $animationFuncAlt $animationTimeFast, width $animationTimeFast $animationFuncAlt, max-height $animationTimeFast $animationFuncAlt;
       position: relative;

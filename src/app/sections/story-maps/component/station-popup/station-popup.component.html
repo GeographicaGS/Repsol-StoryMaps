@@ -36,10 +36,11 @@
     </button>
   </div>
   <div class="waylet-wrapper" *ngIf="currentTab === 'waylet'">
-    <div class="waylet-item" *ngFor="let item of featuredWaylet">
-      <span>{{item.id}}</span>
+    <div class="waylet-item topTransition"
+      *ngFor="let item of data.listWaylet; let index = index">
+      <span [class]="item.level | lowercase">{{item.id}}</span>
       <small>{{item.date | date: 'dd MMM HH:mm'}}</small>
-      <strong>{{item.amount}} €</strong>
+      <strong>{{item.amount | number: '1.2-2'}} €</strong>
     </div>
     <h5 class="info">{{'Operación destacada con Waylet / hora' | translate}}</h5>
   </div>

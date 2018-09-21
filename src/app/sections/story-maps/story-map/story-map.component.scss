@@ -68,7 +68,7 @@
       // flex-direction: column;
       // justify-content: space-between;
       &:first-child {
-        flex: 1 0 310px;
+        flex: 1 0 auto;
       }
       h2 {
         color: $colorSecondary1;
@@ -108,7 +108,7 @@
     }
   }
   .waylet-global {
-    margin-top: 32px;
+    margin-top: 20px;
     margin-left: 24px;
     margin-right: 32px;
     font-size: 72px;
