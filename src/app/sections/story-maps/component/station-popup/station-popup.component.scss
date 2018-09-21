@@ -125,7 +125,7 @@
     }
   }
   .waylet-item {
-    padding: 12px 14px;
+    padding: 12px 10px;
     font-size: 16px;
     display: flex;
     align-items: center;
@@ -141,18 +141,29 @@
     span {
       flex-grow: 1;
       font-size: 14px;
-    }
-    .platino {
-      
-    }
-    .oro {
-
-    }
-    .plata {
-
-    }
-    .bronce {
-
+      &.platino {
+        &:before {
+          @include pseudoElemIcon('/assets/icons/medals/user_platino.svg', 14px, 14px);
+        }
+      }
+      &.oro {
+        &:before {
+          @include pseudoElemIcon('/assets/icons/medals/user_oro.svg', 14px, 14px);
+        }
+      }
+      &.plata {
+        &:before {
+          @include pseudoElemIcon('/assets/icons/medals/user_plata.svg', 14px, 14px);
+        }
+      }
+      &.bronce {
+        &:before {
+          @include pseudoElemIcon('/assets/icons/medals/user_bronce.svg', 14px, 14px);
+        }
+      }
+      &:before {
+        margin-right: 8px;
+      }
     }
   }
   &.open {
