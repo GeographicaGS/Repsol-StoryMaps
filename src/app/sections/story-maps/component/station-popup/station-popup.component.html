@@ -37,7 +37,7 @@
   </div>
   <div class="waylet-wrapper" *ngIf="currentTab === 'waylet'">
     <div class="waylet-item topTransition"
-      *ngFor="let item of data.listWaylet; let index = index">
+      *ngFor="let item of data.listWaylet; let index = index; trackBy: trackItem">
       <span [class]="item.level | lowercase">{{item.id}}</span>
       <small>{{item.date | date: 'dd MMM HH:mm'}}</small>
       <strong>{{item.amount | number: '1.2-2'}} €</strong>

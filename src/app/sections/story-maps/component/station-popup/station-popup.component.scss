@@ -6,8 +6,8 @@
   background-color: $colorSecondary7;
   color: $colorSecondary1;
   display: block;
-
   position: relative;
+
   &:after {
     content: '';
     position: absolute;
@@ -97,8 +97,8 @@
         color: $colorWaylet;
         padding: 8px 14px;
         img {
-          width: 24px;
-          height: 24px;
+          width: 26px;
+          height: 26px;
           border-radius: 8px;
           margin-right: 8px;
         }
@@ -167,12 +167,22 @@
     }
   }
   &.open {
+    margin-bottom: 55px;
+    &:before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: calc(50% - 1px);
+      width: 2px;
+      height: 60px;
+      background-color: $colorWhite;
+    }
     .allInfo {
       opacity: 1;
       pointer-events: auto;
       width: auto;
       height: auto;
-      width: 260px;
+      width: 280px;
       max-height: 445px;
       transition: opacity $animationTimeFast $animationFuncAlt $animationTimeFast, width $animationTimeFast $animationFuncAlt, max-height $animationTimeFast $animationFuncAlt;
       position: relative;
