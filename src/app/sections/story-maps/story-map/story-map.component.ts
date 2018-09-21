@@ -507,6 +507,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
               id: t.id_waylet,
               date: t.start
             });
+            this.stationData.listWaylet.sort((a, b) => b.date - a.date);
           }
           this.stationData.costWaylet += t.cost_waylet || 0;
           this.stationData.percWaylet = 100 * (this.stationData.costWaylet / this.stationData.sales);

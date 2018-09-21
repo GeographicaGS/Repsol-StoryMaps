@@ -8,12 +8,11 @@
   <div class="open-label">{{'Abierta' | translate}}</div>
   <div *ngIf="data.image" class="image" [ngStyle]="{'background-image': 'url(/assets/stations/' + data.image + ')'}"></div>
   <div class="services" *ngIf="currentTab === 'summary'">
-    <img src="/assets/icons/services/24hours.svg" alt="24 hours">
-    <img src="/assets/icons/services/premium-gas.svg" alt="premium gas">
-    <img src="/assets/icons/services/auto-gas.svg" alt="auto gas">
-    <img src="/assets/icons/services/washing-tunnel.svg" alt="washing tunnel">
-    <img src="/assets/icons/services/shop.svg" alt="shop">
-    <img src="/assets/icons/services/burger-king.svg" alt="burguer king">
+    <img src="/assets/icons/services/24hours.svg" title="{{'24 horas' | translate}}">
+    <img src="/assets/icons/services/premium-gas.svg" title="{{'Combustible premium' | translate}}">
+    <img src="/assets/icons/services/auto-gas.svg" title="{{'Auto-gas' | translate}}">
+    <img src="/assets/icons/services/washing-tunnel.svg" title="{{'Túnel de lavado' | translate}}">
+    <img src="/assets/icons/services/shop.svg" title="{{'Tienda' | translate}}">
   </div>
   <div class="header" *ngIf="currentTab === 'summary'">
     <h3>{{'Estación' | translate}} {{data.name}}</h3>
@@ -37,7 +36,7 @@
   </div>
   <div class="waylet-wrapper" *ngIf="currentTab === 'waylet'">
     <div class="waylet-item topTransition"
-      *ngFor="let item of data.listWaylet; let index = index; trackBy: trackItem">
+      *ngFor="let item of data.listWaylet; let index = index;">
       <span [class]="item.level | lowercase">{{item.id}}</span>
       <small>{{item.date | date: 'dd MMM HH:mm'}}</small>
       <strong>{{item.amount | number: '1.2-2'}} €</strong>
@@ -64,6 +63,6 @@
         <span>{{'Calidad E3 trimestral' | translate}}</span>
       </div>
     </div>
-    <h5 class="info">{{'Datos acumulados diario' | translate}}</h5>
+    <h5 class="info">{{'Datos acumulados diarios' | translate}}</h5>
   </ng-container>
 </div>
