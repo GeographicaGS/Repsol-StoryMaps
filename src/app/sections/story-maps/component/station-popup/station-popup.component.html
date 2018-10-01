@@ -36,8 +36,7 @@
       {{'Waylet' | translate}}
     </button>
   </div>
-  <ul class="waylet-wrapper" 
-    *ngIf="currentTab === 'waylet'">
+  <ul class="waylet-wrapper" *ngIf="currentTab === 'waylet'">
     <li class="waylet-item bottomTransition"
       *ngFor="let item of data.listWaylet; let index = index;">
       <span [class]="item.level | lowercase">{{item.id}}</span>
