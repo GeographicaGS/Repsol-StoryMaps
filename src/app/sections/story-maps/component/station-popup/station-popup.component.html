@@ -1,4 +1,4 @@
-<div class="temp" 
+<div class="temp"
   [class.sun]="data.sun"
   [class.clouds]="data.clouds"
   [class.open]="open">
@@ -15,7 +15,7 @@
   <div class="services" *ngIf="currentTab === 'summary'">
     <img src="/assets/icons/services/24hours.svg" title="{{'24 horas' | translate}}">
     <img src="/assets/icons/services/premium-gas.svg" title="{{'Combustible premium' | translate}}">
-    <img src="/assets/icons/services/auto-gas.svg" title="{{'Auto-gas' | translate}}">
+    <img src="/assets/icons/services/auto-gas.svg" title="{{'AutoGas' | translate}}">
     <img src="/assets/icons/services/washing-tunnel.svg" title="{{'Túnel de lavado' | translate}}">
     <img src="/assets/icons/services/shop.svg" title="{{'Tienda' | translate}}">
   </div>
@@ -40,7 +40,7 @@
     </button>
   </div>
   <ul class="waylet-wrapper" *ngIf="currentTab === 'waylet'">
-    <li class="waylet-item bottomTransition"
+    <li class="waylet-item li-enter-anim"
       *ngFor="let item of data.listWaylet; let index = index;">
       <span [class]="item.level | lowercase">{{item.id}}</span>
       <small>{{item.date | date: 'dd MMM HH:mm'}}</small>

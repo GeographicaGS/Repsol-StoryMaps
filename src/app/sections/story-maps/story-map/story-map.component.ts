@@ -453,7 +453,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
     this.transactStDetails = [];
     this.sqlClient.execute(`
       select cost_waylet, id_waylet, nivel_waylet,
-        sun, temp,
+        sun, temp, clouds,
         time_seq, tot_cost, tot_l, tot_transact, avg_e3, tot_incid, start
       from repsol_transact_st_detail_1h
       where cod_establecimiento_sr = '${scene.st_id}' order by time_seq;
