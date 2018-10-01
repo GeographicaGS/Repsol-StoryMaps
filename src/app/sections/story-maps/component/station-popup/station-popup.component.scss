@@ -34,8 +34,8 @@
   }
   .temp {
     position: absolute;
-    top: 50%;
-    left: 100%;
+    bottom: 200px;
+    left: 100px;
     margin-left: 6px;
     padding: 0 6px;
     border: 4px solid $colorTempBorder;
@@ -50,6 +50,11 @@
     }
     &.sun:before {
       background-image: url('/assets/icons/weather/sun.svg');
+    }
+    &.open {
+      top: 50%;
+      left: 100%;
+      bottom: unset;
     }
   }
   .open-label {

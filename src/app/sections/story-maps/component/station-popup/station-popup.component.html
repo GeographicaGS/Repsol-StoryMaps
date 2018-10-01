@@ -1,4 +1,6 @@
-<div *ngIf="open" class="temp" [class.sun]="data.sun">{{data.temp | number: '1.0-0'}}º</div>
+<div class="temp" [class.sun]="data.sun" [class.open]="open">
+  {{data.temp | number: '1.0-0'}}º
+</div>
 <div *ngIf="data.image" 
   class="imageMini" 
   [ngStyle]="{'background-image': 'url(/assets/stations/' + data.image + ')'}"
@@ -48,8 +50,7 @@
     <div class="content">
       <div>
         <app-counter [step]="counterStep" [countTo]="data.liters" [duration]="counterDuration"></app-counter>
-        m<sup>3</sup>
-        <span>{{'de combustible' | translate}}</span>
+        <span>{{'L de combustible' | translate}}</span>
       </div>
       <div>
         <app-counter [step]="counterStep" [countTo]="data.transactions" [duration]="counterDuration"></app-counter>
