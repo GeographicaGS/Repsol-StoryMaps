@@ -34,8 +34,8 @@
   }
   .temp {
     position: absolute;
-    top: 50%;
-    left: 100%;
+    bottom: 200px;
+    left: 100px;
     margin-left: 6px;
     padding: 0 6px;
     border: 4px solid $colorTempBorder;
@@ -50,6 +50,17 @@
     }
     &.sun:before {
       background-image: url('/assets/icons/weather/sun.svg');
+    }
+    &.sun.clouds:before {
+      background-image: url('/assets/icons/weather/sun_cloud.svg');
+    }
+    &:not(.sun).clouds:before {
+      background-image: url('/assets/icons/weather/moon_cloud.svg');
+    }
+    &.open {
+      top: 50%;
+      left: 100%;
+      bottom: unset;
     }
   }
   .open-label {
@@ -108,6 +119,8 @@
   .waylet-wrapper {
     position: relative;
     padding-bottom: 12px;
+    height: 236px;
+    overflow: hidden;
     .info {
       position: absolute;
       bottom: 0;
@@ -123,6 +136,11 @@
       height: 100%;
       background: linear-gradient(to top, $colorSecondary7 0%, transparent 80%);
     }
+    &.animate {
+      animation-fill-mode: forwards;
+      animation-duration: 0.5s;
+      animation-name: wayletList;
+    }
   }
   .waylet-item {
     padding: 12px 10px;
@@ -131,6 +149,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid $colorBorder;
+    box-sizing: border-box;
     small {
       font-size: 12px;
       margin: 0 12px;
@@ -272,5 +291,14 @@
     @include font(bold);
     padding-right: 14px;
     text-align: right;
+  }
+}
+
+@keyframes wayletList {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
   }
 }

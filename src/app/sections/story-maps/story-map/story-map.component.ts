@@ -34,6 +34,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   @ViewChild('histogram') histogram: HistogramComponent;
   stationData = {
     sun: false,
+    clouds: false,
     temp: 0,
     listWaylet: [],
     percWaylet: 0,
@@ -477,14 +478,17 @@ export class StoryMapComponent implements OnInit, OnDestroy {
 
   private processStationDetails() {
     const currentData = this.data.find(t => t.time_seq === this.currentFrame);
-    this.stationData.costWaylet = 0;
-    this.stationData.percWaylet = 0;
-    this.stationData.sales = 0;
-    this.stationData.liters = 0;
-    this.stationData.transactions = 0;
-    this.stationData.incidences = 0;
-    this.stationData.quality = 0;
-    this.stationData.temp = 0;
+    this.stationData = {
+      ...this.stationData,
+      costWaylet: 0,
+      percWaylet: 0,
+      sales: 0,
+      liters: 0,
+      transactions: 0,
+      incidences: 0,
+      quality: 0,
+      temp: 0
+    };
 
     if (currentData) {
       const currentDate = this.utilService.getBeginningOfDay(currentData.start);
@@ -497,22 +501,27 @@ export class StoryMapComponent implements OnInit, OnDestroy {
           this.stationData.transactions += t.tot_transact;
           this.stationData.incidences += t.tot_incid;
           this.stationData.quality = t.avg_e3;
-          if (t.id_waylet) {
-            if (this.stationData.listWaylet.length >= 5) {
-              this.stationData.listWaylet.pop();
-            }
-            this.stationData.listWaylet.unshift({
-              level: t.nivel_waylet,
-              amount: t.cost_waylet,
-              id: t.id_waylet,
-              date: t.start
-            });
-            this.stationData.listWaylet.sort((a, b) => b.date - a.date);
+
+          const dates = this.stationData.listWaylet.map(l => +l.date);
+          const maxDate = Math.max(...dates);
+          const dateIsValid = t.start > maxDate;
+
+          if (t.id_waylet && dateIsValid) {
+            this.stationData.listWaylet = [
+              {
+                level: t.nivel_waylet,
+                amount: t.cost_waylet,
+                id: t.id_waylet,
+                date: t.start
+              },
+              ...this.stationData.listWaylet.slice(-5)
+            ];
           }
           this.stationData.costWaylet += t.cost_waylet || 0;
           this.stationData.percWaylet = 100 * (this.stationData.costWaylet / this.stationData.sales);
           this.stationData.temp = t.temp;
           this.stationData.sun = t.sun;
+          this.stationData.clouds = t.clouds;
         }
       }
     }
