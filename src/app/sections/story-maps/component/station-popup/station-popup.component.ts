@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding } from '@angular/core';
+import { Component, Input, HostBinding, OnChanges } from '@angular/core';
 import { CounterDuration, CounterStep } from '../../../../common';
 
 @Component({
@@ -6,7 +6,20 @@ import { CounterDuration, CounterStep } from '../../../../common';
   templateUrl: './station-popup.component.html',
   styleUrls: ['./station-popup.component.scss']
 })
-export class StationPopupComponent {
+export class StationPopupComponent implements OnChanges {
+
+  private _animate = false;
+
+  @Input()
+  get animate() {
+    return this._animate;
+  }
+  set animate(value) {
+    this._animate = value;
+    setTimeout(() => {
+      this.animate = false;
+    }, 500);
+  }
 
   @Input() data: any;
   @HostBinding('class.open') open = false;
@@ -14,33 +27,6 @@ export class StationPopupComponent {
   counterDuration = CounterDuration;
   counterStep = CounterStep;
   currentTab = 'summary';
-  featuredWaylet = [
-    {
-      id: '1234',
-      date: new Date(),
-      amount: 87.20
-    },
-    {
-      id: '1234',
-      date: new Date(),
-      amount: 87.20
-    },
-    {
-      id: '1234',
-      date: new Date(),
-      amount: 87.20
-    },
-    {
-      id: '1234',
-      date: new Date(),
-      amount: 87.20
-    },
-    {
-      id: '1234',
-      date: new Date(),
-      amount: 87.20
-    }
-  ];
 
   constructor() { }
 
@@ -48,8 +34,8 @@ export class StationPopupComponent {
     this.currentTab = tab;
   }
 
-  trackItem(index, item) {
-    return item.id;
+  ngOnChanges(changes) {
+    console.log('changes: ', changes.data && changes.data.currentValue);
   }
 
 }

@@ -61,6 +61,11 @@ body {
     animation-fill-mode: both;
   }
 
+  .bottomTransition {
+    animation: bottomTransition $animationTimeDefault $animationFuncAlt;
+    animation-fill-mode: both;
+  }
+
   .leftTransition {
     animation: leftTransition $animationTimeDefault $animationFuncAlt;
     animation-fill-mode: both;
@@ -82,6 +87,17 @@ body {
   @keyframes topTransition{
     from {
       transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes bottomTransition{
+    from {
+      transform: translateY(100%);
       opacity: 0;
     }
     to {

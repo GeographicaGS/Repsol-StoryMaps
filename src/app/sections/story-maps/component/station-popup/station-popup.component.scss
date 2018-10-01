@@ -108,6 +108,9 @@
   .waylet-wrapper {
     position: relative;
     padding-bottom: 12px;
+    min-height: 237px;
+    display: flex;
+    flex-direction: column-reverse;
     .info {
       position: absolute;
       bottom: 0;
@@ -122,6 +125,11 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(to top, $colorSecondary7 0%, transparent 80%);
+    }
+    &.animate {
+      animation-fill-mode: forwards;
+      animation-duration: 0.5s;
+      animation-name: wayletList;
     }
   }
   .waylet-item {
@@ -272,5 +280,14 @@
     @include font(bold);
     padding-right: 14px;
     text-align: right;
+  }
+}
+
+@keyframes wayletList {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
   }
 }
