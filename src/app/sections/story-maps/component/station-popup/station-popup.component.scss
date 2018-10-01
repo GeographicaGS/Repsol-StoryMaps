@@ -108,9 +108,8 @@
   .waylet-wrapper {
     position: relative;
     padding-bottom: 12px;
-    min-height: 237px;
-    display: flex;
-    flex-direction: column-reverse;
+    height: 236px;
+    overflow: hidden;
     .info {
       position: absolute;
       bottom: 0;
@@ -139,6 +138,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid $colorBorder;
+    box-sizing: border-box;
     small {
       font-size: 12px;
       margin: 0 12px;

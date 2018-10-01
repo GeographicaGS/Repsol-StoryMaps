@@ -506,14 +506,15 @@ export class StoryMapComponent implements OnInit, OnDestroy {
           const dateIsValid = t.start > maxDate;
 
           if (t.id_waylet && dateIsValid) {
-            this.stationData.listWaylet = this.stationData.listWaylet
-            .concat({
-              level: t.nivel_waylet,
-              amount: t.cost_waylet,
-              id: t.id_waylet,
-              date: t.start
-            })
-            .slice(-5);
+            this.stationData.listWaylet = [
+              {
+                level: t.nivel_waylet,
+                amount: t.cost_waylet,
+                id: t.id_waylet,
+                date: t.start
+              },
+              ...this.stationData.listWaylet.slice(-5)
+            ];
           }
           this.stationData.costWaylet += t.cost_waylet || 0;
           this.stationData.percWaylet = 100 * (this.stationData.costWaylet / this.stationData.sales);
