@@ -1,6 +1,9 @@
 <button class="play" (click)="togglePause()" [class.pause]="pause"></button>
 <div class="content">
-  <h3 *ngIf="date">{{date | date:'EE dd MMM yyyy'}}&nbsp;<span>{{date | date:'HH:mm': '+0000'}}</span></h3>
+  <h3 *ngIf="date">
+    {{date | date:'EE dd MMM yyyy': '+0000'}}&nbsp;
+    <span>{{date | date:'HH:mm': '+0000'}}</span>
+  </h3>
   <svg #svg></svg>
   <div #cursor class="cursor"></div>
   <div #tooltip class="tooltip">
