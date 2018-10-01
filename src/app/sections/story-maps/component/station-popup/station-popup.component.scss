@@ -51,6 +51,12 @@
     &.sun:before {
       background-image: url('/assets/icons/weather/sun.svg');
     }
+    &.sun.clouds:before {
+      background-image: url('/assets/icons/weather/sun_cloud.svg');
+    }
+    &:not(.sun).clouds:before {
+      background-image: url('/assets/icons/weather/moon_cloud.svg');
+    }
     &.open {
       top: 50%;
       left: 100%;

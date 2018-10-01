@@ -1,4 +1,7 @@
-<div class="temp" [class.sun]="data.sun" [class.open]="open">
+<div class="temp" 
+  [class.sun]="data.sun"
+  [class.clouds]="data.clouds"
+  [class.open]="open">
   {{data.temp | number: '1.0-0'}}º
 </div>
 <div *ngIf="data.image" 

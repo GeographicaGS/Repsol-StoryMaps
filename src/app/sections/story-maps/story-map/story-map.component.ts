@@ -34,6 +34,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
   @ViewChild('histogram') histogram: HistogramComponent;
   stationData = {
     sun: false,
+    clouds: false,
     temp: 0,
     listWaylet: [],
     percWaylet: 0,
@@ -520,6 +521,7 @@ export class StoryMapComponent implements OnInit, OnDestroy {
           this.stationData.percWaylet = 100 * (this.stationData.costWaylet / this.stationData.sales);
           this.stationData.temp = t.temp;
           this.stationData.sun = t.sun;
+          this.stationData.clouds = t.clouds;
         }
       }
     }
