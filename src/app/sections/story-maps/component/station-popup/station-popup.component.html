@@ -1,4 +1,4 @@
-<div class="temp" 
+<div class="temp"
   [class.sun]="data.sun"
   [class.clouds]="data.clouds"
   [class.open]="open">
@@ -40,7 +40,7 @@
     </button>
   </div>
   <ul class="waylet-wrapper" *ngIf="currentTab === 'waylet'">
-    <li class="waylet-item bottomTransition"
+    <li class="waylet-item li-enter-anim"
       *ngFor="let item of data.listWaylet; let index = index;">
       <span [class]="item.level | lowercase">{{item.id}}</span>
       <small>{{item.date | date: 'dd MMM HH:mm'}}</small>
